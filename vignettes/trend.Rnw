@@ -1,7 +1,0 @@
-\documentclass{article}
-\usepackage{pdfpages}
-%\VignetteIndexEntry{Tests for trend in more than one repairable system}
-
-\begin{document}
-\includepdf[pages=-, fitpaper=true]{Tests_for_trend_in_more_than_one_repairable_system.pdf}
-\end{document}
