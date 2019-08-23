@@ -1,0 +1,428 @@
+---
+title: "Analysis of Repairable Systems with mcotear"
+author: "Jake Warren"
+date: "8/22/2019"
+output: pdf_document
+abstract: This document is intended to introduce the use of the `mcotear` package for analysis of data on repairable systems.
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, dpi=300, collapse = TRUE, tidy = FALSE, dev = "png")
+```
+
+# Getting started with `mcotear`  
+
+Assuming the `mcotear` package is installed on your computer, the first step would be to load the package. The package can be loaded using the `library` function as shown below. There are many ways you can learn more about the package, one is through listing all the functions in the package by using the command `ls("package:mcotear")`. For all the functions in the package you can visit the help package using the help. An example would be running the command `?ttt` (or equivalently `help(ttt)`) to see the help page/file for the `ttt` (Total Time on Test) function.  
+
+Additional, most, if not all of the functions in the package are documented with examples. If a function has an example you can see that example documented at the bottom of the function's help page. There you would see code that would execute the function. If you want to see what is actually produced by the example you could copy that code and run it in your R session, or you could run the example without having to copy/paste or retype the whole example by using the `example` function. For example, running the command `example(ttt)` in your R session would run the example documented for the `ttt` function.  
+
+Lastly, in the package I documented some of the references I used in order to create this package. You can see/access those references using the command `browseVignettes("mcotear")`.  
+
+During the loading of the `mcotear` package via the `library` function you should see via a message returned that the `ggplot2` package is loaded. In the last part of the following code block I set a `ggplot2` black and white color theme for use throughout this paper.  
+
+```{r}
+library(mcotear)
+# Loads the package
+
+#ls("package:mcotear")
+# Lists all of the functions/objects in the package.
+
+#?ttt
+#example(ttt)
+
+
+#browseVignettes("mcotear")
+# browseVignettes shows you some of the package
+# documentation. I included some of the papers
+# I used to create these functions within the
+# documentation.
+
+theme_set(theme_bw())
+# Sets ggplot2 color theme
+```
+
+# Objects in `mcotear`  
+
+In the `mcotear` package that are few objects that get loaded for use along with the functions. The objects that are loaded are `amsaa`, `cbPalette`, and `cbbPalette`. The first object `amsaa` is a data set that came from one of the references documented in package and accessible via `browseVignettes("mcotear")`.  The data set contains simulated data consisting of failure times for three repairable systems (you can see this in the help documentation for `amsaa` using `?amsaa`).  
+
+```{r}
+amsaa
+```
+
+The other objects `cbPalette`, and `cbbPalette` are hexidecimal color code values for color-blind friendly color palettes. These color-blind friendly color palettes come from the "Cookbook for R", at http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/. Again, this is documented in the `cbPalette`, and `cbbPalette` help pages/files.  
+
+```{r}
+cbPalette
+cbbPalette
+```
+
+# Repairable Systems Analysis Example  
+
+Now that the package has been introduced a little this section will provide an example of analysis of the repairable systems using the `amsaa` data set. The full `amsaa` data set was printed above. Below I print just a few rows of the data set, and the structure of the data set. We see that we have three columns giving the failure number ("Failure"), system identification ("System"), and time of the failure ("Time").  
+
+```{r}
+head(amsaa)
+str(amsaa)
+```
+
+```{r}
+something here?
+t <- split(amsaa$Time, amsaa$System)
+```
+
+## Plots to determine failure trends  
+
+The first thing we want to know when analyzing data from repairable systems is whether there is a **trend** in the times between failure. In other words, we want to know if the times between failure are getting longer, shorter, or staying constant. We can inspect this first using graphs. There are a few different types of plots that can help with this inspection such as the Duane Plot, Total Time on Test Plot, and the 
+
+### Duane Plot
+
+In the package I did not specifically include a funtion to generate a Duane Plot, but given the functions I created it is easy enough to creae a Duane Plot. A Duane Plot is a plot of the **cumulative failure rate** ($\frac{N(t_{i})}{t_{i}}$) versus the time of failure ($t_{i}$), where $t_{i}$ represents the time of the $i$th failure, and $N(t_{i})$ represents the number of failures that have occurred up to time $t_{i}$. (Some implementations of the Duane Plot suggest inverting the value of the y-axis such that $\frac{t_{i}}{N(t_{i})}$, the cumulative mean time between failure, is plotting instead of the cumulative failure rate.) The values plotted on a Duane Plot are plotted on a log-log scale. When points fall along a straight line this gives an indication that a **power-law process** is a good is a good model for the data. If the points follow an increasing or decreasing slope, or follow a constant zero-slope line this gives an indication of whether the failure rate is increasing or decreasing (this depends on whether you plot $\frac{N(t_{i})}{t_{i}}$ or $\frac{t_{i}}{N(t_{i})}$), or staying constant.  
+
+The `rocof` function, which stands for the **rate of occurrence of failures** (ROCOF), can be used to help generate a Duane Plot. The `rocof` function returns the cumulative **mean time between failure** (MTBF), and cumulative failure rate (aka ROCOF) as a data frame given the inputs of the failure times.  
+
+#### Assuming systems are identical  
+
+Below `rocof` function is used under the assumption that the systems are identical. If we do not want to make that assumption, or we want to visually inspect this assumption we need to compute the ROCOF per system, which will be done in the next section.
+
+```{r}
+rocof_identical <- rocof(t = split(amsaa$Time, amsaa$System), by = NULL)
+head(rocof_identical)
+names(rocof_identical)[1] <- "Time"
+head(rocof_identical)
+# Get the nonparametric rocof and mtbf estimates.
+# I show the first 6 rows so you can see
+# what it looks like, and you can see the
+# column names. Then I change the name
+# of "t" to "Time" so it matches the name
+# in the amsaa data set. The rocof and mtbf
+# are inverses of one another. You can use
+# either of these to create a Duane Plot.
+```
+
+One I have the output from the `rocof` function I can associate that information to the original data set, merging the two together, using the `merge` function. When merging, you need to ensure there is a common link between the two data frames, which in this case is our "Time" variable.  
+
+```{r}
+amsaa_identical <- merge(amsaa, rocof_identical, by = "Time")
+head(amsaaa_identical)
+# Merge our data set with the df_rocof by the Time variable
+```
+
+Now I can create the Duane Plot as follows. In the following plot uses the "rocof" ($\frac{N(t_{i})}{t_{i}}$) on the y-axis. Since the ROCOF is decreasing this indicates that the system(s) are improving over time.  
+
+```{r, fig.height=4, fig.width=4}
+ggplot(amsaaa_identical,
+  aes(
+    x = Time,
+    y = rocof)) +
+  scale_x_log10() +
+  scale_y_log10() +
+  geom_smooth(method='lm', se = FALSE) +
+  geom_point() +
+  labs(y = "Cumulative Failure Rate") +
+  scale_colour_manual(values = cbPalette) +
+  ggtitle("Duane Plot")
+# Create a Duane Plot. A Duane Plot is a
+# tool to visually assess if the data appears to follow
+# a Power NHPP by assessing if the data appears to follow
+# a straight line when plotted on a log-log scale.
+# If the data followed a horizontal straight line
+# that is an indication of a HPP rather than a NHPP.
+# Here since I plotted the rocof vs time, you can 
+# see that it appears as though the rocof is decreasing,
+# or in other words the failure rate is decreasing, or
+# the time between failures is increasing.
+```
+
+Alternatively I could plot the inverse of "rocof", the "mtbf" on the y-axis. The following plot uses the "mtbf" ($\frac{t_{i}}{N(t_{i})}$) on the y-axis. Since the MTBF is increasing this indicates that the system(s) are improving over time.  
+
+```{r, fig.height=4, fig.width=4}
+ggplot(amsaa_identical,
+  aes(
+    x = Time,
+    y = mtbf)) +
+  scale_x_log10() +
+  scale_y_log10() +
+  geom_smooth(method='lm', se = FALSE) +
+  geom_point() +
+  labs(y = "Cumulative MTBF") +
+  scale_colour_manual(values = cbPalette) +
+  ggtitle("Duane Plot")
+# This is the same Duane Plot, just now using the
+# mtbf instead of the rocof. These are equivalent,
+# and lead to the same conclusions.
+```
+
+#### Inspecting the assumption that systems are identical  
+
+```{r}
+t <- split(amsaa$Time, amsaa$System)
+df_rocof2 <- rocof(t = t, by = names(t))
+head(df_rocof2)
+names(df_rocof2)[1:2] <- c("System", "Time")
+amsaa3 <- merge(amsaa, df_rocof2, by = c("Time", "System"))
+head(amsaa3)
+# The rocof and mtbf estimates we got before were
+# based on grouping all systems together.
+# Instead I could do it by System, and create
+# a Duane plot with the Systems separated to 
+# see if they all seem to follow a similar pattern.
+# This would be a visual assessment of a common beta.
+```
+
+```{r, fig.height=4, fig.width=4}
+ggplot(amsaa3,
+  aes(
+    x = Time,
+    y = rocof,
+    colour = System)) +
+  scale_x_log10() +
+  scale_y_log10() +
+  geom_smooth(method='lm', se = FALSE) +
+  geom_point() +
+  labs(y = "Cumulative Failure Rate") +
+  scale_colour_manual(values = cbPalette) +
+  ggtitle("Duane Plot")
+# This is a Duane Plot by system. We see that
+# the slopes are not exactly equal, but they
+# are all indicating a decreasing failure rate.
+# The common_beta test/function already told us
+# that there was no statistical difference between
+# the systems' failure rates.
+```
+
+```{r}
+df_ttt <- ttt(
+  t = split(amsaa2$Time, amsaa2$System),
+  T = list(200,200,200))
+# This ttt function is for the total time on test (TTT).
+# The TTT is used in certain trend tests (the
+# Military Handbook Test, and Laplace Centroid Tests
+# both have TTT versions, see the trend_test function).
+# The TTT can also be used in plots to visually assess
+# if the data follow a Power Law Process.
+```
+
+```{r, fig.height=4, fig.width=4}
+ggplot(df_ttt, aes(x = ttt, y = scaled_ttt)) +
+   geom_line(colour = "red") + geom_point() +
+   geom_abline(intercept = 0, slope = 1) +
+   labs(
+     x = "Total Time on Test",
+     y = "Scaled Total Time on Test") +
+   scale_x_continuous(limits = c(0, 1), expand = c(0, 0))  +
+   scale_y_continuous(limits = c(0, 1), expand = c(0, 0)) +
+   theme(plot.margin = margin(t = 10, r = 10, unit = "pt")) +
+   coord_fixed() +
+   ggtitle("TTT Plot")
+# A power-law process is appropriate if the TTT plot lies
+# close to the diagonal or is a curve that is either concave
+# up or concave down. If there is no pattern, or a curve that
+# shifts between being concave up and concave down, the
+# power-law process is inadequate. We seem to have a pattern
+# with a concave up curve. Concave up indicates decreasing
+# failure rate. Concave down would indicate increasing
+# failure rate, and no curve (i.e. following the straight line)
+# would indicate a HPP.
+```
+
+```{r}
+t <- split(amsaa2$Time, amsaa2$System)
+T <- list(200,200,200)
+ttt_by_system <- purrr::map2(t, T, ttt)
+ttt_by_system <- Map(rbind, ttt_by_system, data.frame(0,0,0))
+df_ttt_by_system <- dplyr::bind_rows(ttt_by_system, .id = "System")
+head(df_ttt_by_system)
+names(df_ttt_by_system)[2] <- "Time"
+# In the ttt function I did not include a "by"
+# arguement that lets you get the TTT per
+# system, for example. But, if you install
+# the purrr and dplyr packages you can easily get
+# the TTT per system as I show above. You could
+# also just run the ttt function 3 times by only
+# passing in the t and T for each system separately,
+# but if you had 10 systems, 100 systems, etc. you
+# probably wouldn't want to do that. You could follow
+# this appoach in the other functions too (mcf and rocof),
+# but the "by" variable in those was included to
+# make it a litter easier. (Note that the Map, step
+# I included is really not necessary, but I included
+# it so the ttt plot lines would start at the origin.)
+```
+
+```{r, fig.height=4, fig.width=4}
+ggplot(df_ttt_by_system, aes(x = ttt, y = scaled_ttt, colour = System)) +
+   geom_line() + geom_point() +
+   geom_abline(intercept = 0, slope = 1) +
+   labs(
+     x = "Total Time on Test",
+     y = "Scaled Total Time on Test") +
+   scale_x_continuous(limits = c(0, 1), expand = c(0, 0))  +
+   scale_y_continuous(limits = c(0, 1), expand = c(0, 0)) +
+   theme(plot.margin = margin(t = 10, r = 10, unit = "pt")) +
+   coord_fixed() +
+   scale_colour_manual(values = cbPalette) +
+   ggtitle("TTT Plot")
+```
+
+```{r, fig.height=4, fig.width=4}
+# Plot Time Between Failures vs Time
+ggplot(amsaa,
+  aes(
+    x = Time,
+    y = ifelse(diff(c(0,amsaa$Time)) < 0, amsaa$Time, diff(c(0,amsaa$Time))),
+    colour = System)) +
+  geom_point() + geom_line() +
+  labs(
+    x = "Operating Hours",
+    y = "Time Between Failures",
+    main = "Time Between Failures vs Time"
+  ) + scale_colour_manual(values = cbPalette) +
+  ggtitle("Time Between Failures vs. Time")
+```
+
+```{r, fig.height=4, fig.width=4}
+# Plot Time Between Failures vs Failure Number
+ggplot(amsaa,
+  aes(
+    x = Failure,
+    y = ifelse(diff(c(0,amsaa$Time)) < 0, amsaa$Time, diff(c(0,amsaa$Time))),
+    colour = System)) +
+  geom_point() + geom_line() +
+  labs(
+    x = "Failure Number",
+    y = "Time Between Failures",
+    main = "Time Between Failures vs Time"
+  ) + scale_colour_manual(values = cbPalette) +
+  ggtitle("Time Between Failures vs. Failure Number") +
+  scale_x_continuous(breaks = 1:15) +
+  theme(panel.grid.minor.x = element_blank())
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+(m <- power_law_process(
+  t = split(amsaa$Time, amsaa$System),
+  T = list(200,200,200),              	  # If any one was failure truncated
+  alpha = 0.05,
+  fail.trunc = FALSE,                     # then make this true
+  iter = 10
+))
+# Fit Power-Law NHPP (AMSAA-Crow Model)
+# the .converge items can be ignored since
+# we have time terminated data.
+# If the data were failure terminated
+# then iterative methods need to be used
+# to solve for the parameters, so the
+# .converge items are included so you can
+# assess if they if the reached convergence.
+# So, the iter parameter in the function is
+# only applicable to failure terminated data,
+# when we would make fail.trunc = TRUE.
+# Also, note that the final lambda estimate
+# is a transformation of the lambda.converge,
+# so they will not match.
+# Additionally, alpha is not implemented right
+# now. I plan to include confidence intervals
+# for the parameters in a future update, which
+# will then depend upon alpha.
+```
+
+```{r}
+common_beta(
+  t = split(amsaa$Time, amsaa$System),
+  T = list(200,200,200),
+  fail.trunc = FALSE)
+# Large p-value, do not reject null hypothesis
+# of a common shape parameter
+```
+
+```{r}
+trend_test(
+  t = split(amsaa$Time, amsaa$System),
+  T = list(200,200,200),
+  fail.trunc = FALSE)
+# Low p-values across all tests indicates we do
+# not have a Homogeneous Poisson Process
+# (failure rate is not constant).
+```
+
+```{r}
+power_law_mcf(t = amsaa$Time, m$est[1], m$est[2])
+# power_law_mcf(t = list(amsaa$Time), m$est[1], m$est[2])
+# power_law_mcf(t = split(amsaa$Time, amsaa$System), m$est[1], m$est[2])
+# Any one of these work. These values themselves
+# are not real useful. This function is more
+# useful in plotting the function versus the
+# observed/emperical mcf estimates so you can 
+# visually assess if the model fits the data.
+```
+
+```{r}
+df_mcf <- mcf(t = split(amsaa$Time, amsaa$System), by = NULL)
+head(df_mcf)
+names(df_mcf)[1] <- "Time"
+head(df_mcf)
+# Get the nonparametric mcf estimates.
+# I show the first 6 rows so you can see
+# what it looks like, and you can see the
+# column names. Then I change the name
+# of "t" to "Time" so it matches the name
+# in the amsaa data set.
+```
+
+```{r}
+amsaa1 <- merge(amsaa, df_mcf, by = "Time")
+head(amsaa1)
+# Merge the nonparametric mcf estimates
+# with amsaa into a new data.frame amsaa1
+```
+
+```{r, fig.height=4, fig.width=4}
+#dev.new(height = 4, width = 4)
+ggplot(amsaa1, aes(x = Time, y = mcf)) +
+  geom_point() +
+  labs(
+    x = "Operating Hours", y = "MCF",
+    title = "Mean Cumulative Function") +
+  stat_function(
+    fun = function(x){
+      power_law_mcf(t = x, lambda = m$e[[1]], beta = m$e[[2]])$power_mcf
+    },
+    mapping = aes(colour = "Power-Law NHPP")
+  ) +
+  scale_colour_manual("Functions:",
+    breaks = c("Power-Law NHPP"),
+    values = c("Power-Law NHPP" = cbPalette[2]),
+    guide = guide_legend(
+      override.aes = list(
+        linetype = c("solid")
+    ))
+  ) +
+  theme(legend.position = c(.225,.875),
+    legend.background = element_rect(fill="grey95"),
+    legend.key = element_rect(fill="grey95"),
+    legend.text = element_text(size=8),
+    legend.title=element_text(size=10)
+  )
+# setwd("C:/Users/ThinkPad_User_003/Desktop/Analysis of Repairable Systems")
+# ggsave("AMSAA_MCF.png", dpi = 300, height = 4, width = 4)
+# Mean Cumulative Function Plot
+# Looks like the data fits pretty well.
+# I show how you can set your working directoy
+# and save the plot to file.
+```
+

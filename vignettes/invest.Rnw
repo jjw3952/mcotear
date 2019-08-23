@@ -1,0 +1,7 @@
+\documentclass{article}
+\usepackage{pdfpages}
+%\VignetteIndexEntry{Investigation of some tests for homogeneity}
+
+\begin{document}
+\includepdf[pages=-, fitpaper=true]{Investigation_of_some_tests_for_homogeneity.pdf}
+\end{document}

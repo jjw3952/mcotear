@@ -1,0 +1,7 @@
+\documentclass{article}
+\usepackage{pdfpages}
+%\VignetteIndexEntry{Analysis of Time Between Failures for Repairable Components}
+
+\begin{document}
+\includepdf[pages=-, fitpaper=true]{Analysis_of_Time_Between_Failures_for_Repairable_Components.pdf}
+\end{document}
