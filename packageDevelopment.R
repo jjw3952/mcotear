@@ -15,7 +15,8 @@ devtools::create("mcotear")
 # ls("package:devtools")
 
 # Set working directory to current package
-setwd("C:/Users/ThinkPad_User_003/Desktop/R Development 3.5.2/mcotear")
+#setwd("C:/Users/ThinkPad_User_003/Desktop/R Development 3.5.2/mcotear")
+setwd("C:/Users/MCOTEA_User_001/Documents/GitHub/mcotear/mcotear")
 
 # Required packages
 use_package("ggplot2")
@@ -42,7 +43,9 @@ document()
 build_vignettes()
 build()
 #install()
-install.packages("C:/Users/ThinkPad_User_003/Desktop/R Development 3.5.2/mcotear_0.0.0.9000.tar.gz", repos = NULL, type="source")
+install.packages("C:/Users/MCOTEA_User_001/Documents/GitHub/mcotear/mcotear_0.0.0.9000.tar.gz")
+
+#install.packages("C:/Users/ThinkPad_User_003/Desktop/R Development 3.5.2/mcotear_0.0.0.9000.tar.gz", repos = NULL, type="source")
 
 #build(path = "C:/Users/ThinkPad_User_003/Desktop/R")
 #install("C:/Users/ThinkPad_User_003/Desktop/R/mcotear")

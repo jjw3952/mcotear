@@ -260,7 +260,7 @@ ggplot(ttt_identical, aes(x = ttt, y = scaled_ttt)) +
 
 #### Inspecting the assumption that systems are identical  
 
-The following differs from the previous section in that we no account for systems being different. In order to do that I use a few functions from other R packages to assist in passing each element of objects "t" and "T_time_trunc" to the `ttt` function separately, and   
+The following differs from the previous section in that we now account for systems being different. In order to do that I use a few functions from other R packages to assist in passing each element of objects "t" and "T_time_trunc" to the `ttt` function separately, and then combine the results in a single data frame.  
 
 ```{r}
 (ttt_ni <- purrr::map2(t, T_time_trunc, ttt))
@@ -283,6 +283,8 @@ names(df_ttt_ni)[2] <- "Time"
 # I included is really not necessary, but I included
 # it so the ttt plot lines would start at the origin.)
 ```
+
+Below is a TTT plot by system. All three systems show a concave up pattern indicating the failure rates are decreasing (i.e. improving), although we are left with a subjective determination as to whether the systems' failure rates are by chance, or different per system.  
 
 ```{r, fig.height=4, fig.width=5}
 ggplot(df_ttt_ni, aes(x = ttt, y = scaled_ttt, colour = System)) +
@@ -356,7 +358,7 @@ Now that we have finished with some preliminary data visualization we may be int
 
 ## Test for Trend
 
-The first test is for trend in the failure rate. This was visually inspected in the plotting above, but now more formally we can test for trend to see if the failure rate is constant (indicating a Homogeneous Poisson Process that can be modeled by the Expenential distribution), or increasing or decreasing (indicating a Nonhomogeneous Poisson Process).  
+The first test is for trend in the failure rate. This was visually inspected in the plotting above, but now we can formally test for trend to see if the failure rate is constant (indicating a Homogeneous Poisson Process that can be modeled by the Expenential distribution), or increasing or decreasing (indicating a Nonhomogeneous Poisson Process). The results of the Military Handbook Test (called this due to its origin from the MIL-HDBK-189), the LaPlace Test, and the Anderson-Darling Test for Trend are all printed. Details of these tests can be found in the package documentation (see `browseVignettes("mcotear")`, the PDF named *Tests for trend in more than on repairable system*, and `?trend_test`). From the results of the tests (low p-values) we would conclude that the failure rate is not constant, and that the systems failures follow a Nonhomogeneous Poisson Process (NHPP).  
 
 ```{r}
 trend_test(
@@ -369,7 +371,7 @@ trend_test(
 ```
 
 ```{r}
-purrr::map2(t, T_time_trunc, trend_test, FALSE)
+# purrr::map2(t, T_time_trunc, trend_test, FALSE)
 # purrr::map2(t, T_fail_trunc, trend_test, TRUE)
 # trend_test(t, T, fail.trunc = FALSE)
 # Low p-values across all tests indicates we do
@@ -378,6 +380,8 @@ purrr::map2(t, T_time_trunc, trend_test, FALSE)
 ```
 
 ## Fitting a Power Law Process
+
+Since the data indicates that the times between failure are not constant (i.e. are not consistent with a Homogeneous Poisson Process (HPP)) a NHPP should be used to describe the times between failure rather than methods applicable to the exponential distribution. Below the `power_law_prcess` function is used to estimate the parameters of a NHPP with a power law intensity fucntion. (Note that the "alpha" argument current does nothing. The intent is for this to lead to confidence intervals in future versions of the package. Also, the "iter" argument is only applicable to failure truncated data.) The "beta" parameter ($\beta$) affects how the system deteriorates or improves over time. $\beta > 1$ indicates the intensity function is increasing, i.e. that failures are occurring more frequently, the system is deteriorating. $\beta < 1$ indicates the intensity function is decreasing, i.e. that failures are occurring less frequently, the system is improving. $\beta = 1$ indicates the intensity function is constant and the power law process reduces to the HPP.  The estimated $\beta$ value of 0.615 (with 95/% interval not containing 1) indicates that the failure rate is decreasing.  
 
 ```{r}
 (m <- power_law_process(

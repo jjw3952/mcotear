@@ -26,13 +26,38 @@ The output will be a \code{\link[base]{data.frame}} containing,
 \code{rocof} calculates the sample nonparametric estimate of the
   intensity function (i.e. rate of occurrence of failures (ROCOF), or failure rate)
   at time t. The inverse of this would be the sample nonparametric
-  mean time between failure at time t.
+  mean time between failure at time t. This function is useful for the
+  creation of Duane Plots as shown in the examples section below.
 }
 \examples{
 data(amsaa)
 
 # Three systems failure times.
-rocof(t = split(amsaa$Time, amsaa$System))
+(df <- rocof(t = split(amsaa$Time, amsaa$System)))
+
+ggplot(df,
+  aes(
+    x = t
+    y = rocof)) +
+  scale_x_log10() +
+  scale_y_log10() +
+  geom_smooth(method='lm', se = FALSE) +
+  geom_point() +
+  labs(y = "Cumulative Failure Rate") +
+  scale_colour_manual(values = cbPalette) +
+  ggtitle("Duane Plot")
+
+ggplot(df,
+  aes(
+    x = t
+    y = mtbf)) +
+  scale_x_log10() +
+  scale_y_log10() +
+  geom_smooth(method='lm', se = FALSE) +
+  geom_point() +
+  labs(y = "Cumulative MTBF") +
+  scale_colour_manual(values = cbPalette) +
+  ggtitle("Duane Plot")
 
 }
 \seealso{

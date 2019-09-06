@@ -49,7 +49,7 @@ trend_test(
   T = list(197.2,190.8,195.8),
   fail.trunc = TRUE)
 
-#' # One system, time truncated
+# One system, time truncated
 trend_test(
   t = list(subset(amsaa$Time, amsaa$System == "S1")),
   T = list(200),

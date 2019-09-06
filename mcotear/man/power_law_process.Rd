@@ -25,7 +25,7 @@ fail.truc is TRUE.}
 }
 \value{
 The output will be a list consisting of parameter estimates,
-  confidence interals (yet to be implemented), and iterative beta
+  confidence interals (exact confidence intervals for beta), and iterative beta
   and lambda estimates to verify convergence when fail.truc is TRUE.
 }
 \description{

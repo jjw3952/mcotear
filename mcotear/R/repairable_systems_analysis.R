@@ -17,7 +17,7 @@
 #'   fail.truc is TRUE.
 #'
 #' @return The output will be a list consisting of parameter estimates,
-#'   confidence interals (yet to be implemented), and iterative beta
+#'   confidence interals (exact confidence intervals for beta), and iterative beta
 #'   and lambda estimates to verify convergence when fail.truc is TRUE.
 #'
 #' @seealso \code{\link{power_law_mcf}}, \code{\link{mcf}},
@@ -60,7 +60,7 @@ power_law_process <- function(t, T, alpha = 0.05, fail.trunc = FALSE, iter = 10)
   ## MLEs, beta is shape, lambda is scale
 
   # Total number of failures
-  n <- length(unlist(t))
+  (n <- length(unlist(t)))
 
   # Maximum likelihood estimate for beta
   (beta.hat <- n / sum(
@@ -98,34 +98,46 @@ power_law_process <- function(t, T, alpha = 0.05, fail.trunc = FALSE, iter = 10)
   (lambda.hat2 <- 1/exp(log(lambda.hat[length(lambda.hat)])/
     beta.hat[length(beta.hat)]))
 
+  # CIs for beta from Statistical Methods for the Reliability of Repairable Systems
+  # pgs 138 (time truncated), and 120 (failure truncated)
+  if(fail.trunc == TRUE){
+    (beta.lb <- (qchisq(1-alpha/2, 2*(n-1), lower.tail = FALSE)*beta.hat[length(beta.hat)]) / (2*n))
+    (beta.ub <- (qchisq(1-alpha/2, 2*(n-1), lower.tail = TRUE)*beta.hat[length(beta.hat)]) / (2*n))
+  } else {
+    (beta.lb <- (qchisq(1-alpha/2, 2*n, lower.tail = FALSE)*beta.hat[length(beta.hat)]) / (2*n))
+    (beta.ub <- (qchisq(1-alpha/2, 2*n, lower.tail = TRUE)*beta.hat[length(beta.hat)]) / (2*n))
+  }
+ 
+
   # Simultaneous CIs on lambda.hat and beta.hat --------------------------------
   # This is based on pages 21-23 of AMSAA Technical Report 138
   # These are correct for beta.lb, beta.ub, lambda.lb, and lambd.ub,
   # but translating from lambda.lb and lambd.ub, to
-  # lambda.lb2 and lambd.ub2 is not correct
-  alpha.adj <- 1 - sqrt(1-alpha)
+  # lambda.lb2 and lambd.ub2 may not be correct
+#  alpha.adj <- 1 - sqrt(1-alpha)
 
-  beta.lb <- beta.hat[length(beta.hat)] *
-    qchisq(alpha.adj/2, 2*n, lower.tail = TRUE) / (2*n)
+#  beta.lb2 <- beta.hat[length(beta.hat)] *
+#    qchisq(alpha.adj/2, 2*n, lower.tail = TRUE) / (2*n)
 
-  beta.ub <- beta.hat[length(beta.hat)] *
-    qchisq(1-alpha.adj/2, 2*n, lower.tail = TRUE) / (2*n)
+#  beta.ub2 <- beta.hat[length(beta.hat)] *
+#    qchisq(1-alpha.adj/2, 2*n, lower.tail = TRUE) / (2*n)
 
-  if(fail.trunc == FALSE){
-    lambda.lb <- qchisq(alpha.adj/2, 2*n, lower.tail = TRUE) /
-      (2*sum(unlist(T)^beta.ub) )
-    lambda.ub <- qchisq(1-alpha.adj/2, 2*n+2, lower.tail = TRUE) /
-      (2*sum(unlist(T)^beta.lb) )
-  } else
-  if(fail.trunc == TRUE){
-    lambda.lb <- qchisq(alpha.adj/2, 2*n) / (2* sum( unlist(T)^beta.ub ))
-    lambda.ub <- qchisq(1-alpha.adj/2, 2*n) / (2* sum( unlist(T)^beta.lb ))
-  }
+#  if(fail.trunc == FALSE){
+#    lambda.lb <- qchisq(alpha.adj/2, 2*n, lower.tail = TRUE) /
+#      (2*sum(unlist(T)^beta.ub2) )
+#    lambda.ub <- qchisq(1-alpha.adj/2, 2*n+2, lower.tail = TRUE) /
+#      (2*sum(unlist(T)^beta.lb2) )
+#  } else
+#  if(fail.trunc == TRUE){
+#    lambda.lb <- qchisq(alpha.adj/2, 2*n) / (2* sum( unlist(T)^beta.ub2 ))
+#    lambda.ub <- qchisq(1-alpha.adj/2, 2*n) / (2* sum( unlist(T)^beta.lb2 ))
+#  }
+
+  # Note sure if these are not correct
+#  (lambda.lb2 <- 1/exp(log(lambda.lb)/beta.ub2))
+#  (lambda.ub2 <- 1/exp(log(lambda.ub)/beta.lb2))
+
   #-----------------------------------------------------------------------------
-
-  # These are not correct
-  (lambda.lb2 <- 1/exp(log(lambda.lb)/beta.ub))
-  (lambda.ub2 <- 1/exp(log(lambda.ub)/beta.lb))
 
   # The value of the shape (beta) depends on whether your
   #system is improving, deteriorating, or remaining stable.
@@ -140,10 +152,11 @@ power_law_process <- function(t, T, alpha = 0.05, fail.trunc = FALSE, iter = 10)
 
   # Putting the parameter CIs into a data.frame
   ci.df <- data.frame(
-        lcb = c(beta.lb, lambda.lb2),
-        ucb = c(beta.ub, lambda.ub2)
+        lcb = c(beta.lb), #, lambda.lb2),
+        ucb = c(beta.ub) #, lambda.ub2)
       )
-  row.names(ci.df)[1:2] <- c("beta","lambda")
+  #row.names(ci.df)[1:2] <- c("beta","lambda")
+  row.names(ci.df)[1] <- c("beta")
 
   return(
     list(
@@ -151,7 +164,7 @@ power_law_process <- function(t, T, alpha = 0.05, fail.trunc = FALSE, iter = 10)
         "lambda" = lambda.hat2,
         "beta" = beta.hat[length(beta.hat)]
       ),
-      #"CIs" = ci.df,
+      "CIs" = ci.df,
       "beta.convergence" = beta.hat,
       "lambda.convergence" = lambda.hat
     )
@@ -344,7 +357,8 @@ power_law_mcf <- function(t, lambda, beta){
 #' \code{rocof} calculates the sample nonparametric estimate of the
 #'   intensity function (i.e. rate of occurrence of failures (ROCOF), or failure rate)
 #'   at time t. The inverse of this would be the sample nonparametric
-#'   mean time between failure at time t.
+#'   mean time between failure at time t. This function is useful for the
+#'   creation of Duane Plots as shown in the examples section below.
 #'
 #' @param t A list of failure time vectors. Each vector should indicate
 #'   a different system, i.e. if you have multiple systems each
@@ -366,7 +380,31 @@ power_law_mcf <- function(t, lambda, beta){
 #' data(amsaa)
 #'
 #' # Three systems failure times.
-#' rocof(t = split(amsaa$Time, amsaa$System))
+#' (df <- rocof(t = split(amsaa$Time, amsaa$System)))
+#'
+#' ggplot(df,
+#'   aes(
+#'     x = t
+#'     y = rocof)) +
+#'   scale_x_log10() +
+#'   scale_y_log10() +
+#'   geom_smooth(method='lm', se = FALSE) +
+#'   geom_point() +
+#'   labs(y = "Cumulative Failure Rate") +
+#'   scale_colour_manual(values = cbPalette) +
+#'   ggtitle("Duane Plot")
+#' 
+#' ggplot(df,
+#'   aes(
+#'     x = t
+#'     y = mtbf)) +
+#'   scale_x_log10() +
+#'   scale_y_log10() +
+#'   geom_smooth(method='lm', se = FALSE) +
+#'   geom_point() +
+#'   labs(y = "Cumulative MTBF") +
+#'   scale_colour_manual(values = cbPalette) +
+#'   ggtitle("Duane Plot")
 #'
 #' @export
 rocof <- function(t, by = NULL){
@@ -530,7 +568,7 @@ power_law_intensity <- function(t, lambda, beta){
 #'   T = list(197.2,190.8,195.8),
 #'   fail.trunc = TRUE)
 #'
-#' #' # One system, time truncated
+#' # One system, time truncated
 #' trend_test(
 #'   t = list(subset(amsaa$Time, amsaa$System == "S1")),
 #'   T = list(200),
