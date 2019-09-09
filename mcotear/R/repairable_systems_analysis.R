@@ -691,6 +691,12 @@ trend_test <- function(t, T, fail.trunc = TRUE){
   # https://uu.diva-portal.org/smash/get/diva2:468559/FULLTEXT01.pdf
   # Investigation of some tests for homogeneity of intensity
   # with applications to insurance data
+  # The following would also give the same result
+  # ad <- NULL
+  # for(i in seq_along(T)){
+  #  ad <- c(ad, log(T[[i]]/t[[i]]))
+  #  }
+  #  ad.test(ad, "pexp")
 
   if(fail.trunc == FALSE){
     scaled_ttt <- c(scaled_ttt, 1)
@@ -702,7 +708,7 @@ trend_test <- function(t, T, fail.trunc = TRUE){
     sumAD[i] <- (2*i-1)*( log(scaled_ttt[i]) + log(1 - scaled_ttt[N-i]) );
   }
   (AD <- -(N-1) -(1/(N-1))*sum(sumAD))
-  ad.p.value <- goftest::pAD(AD, n = 500, lower.tail = FALSE)
+  ad.p.value <- goftest::pAD(AD, n = N, lower.tail = FALSE)
   #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
   df.ad <- data.frame(

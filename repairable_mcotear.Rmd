@@ -50,7 +50,7 @@ In the `mcotear` package that are few objects that get loaded for use along with
 amsaa
 ```
 
-The other objects `cbPalette`, and `cbbPalette` are hexidecimal color code values for color-blind friendly color palettes. These color-blind friendly color palettes come from the "Cookbook for R", at http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/. Again, this is documented in the `cbPalette`, and `cbbPalette` help pages/files.  
+The other objects `cbPalette`, and `cbbPalette` are hexadecimal color code values for color-blind friendly color palettes. These color-blind friendly color palettes come from the "Cookbook for R", at http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/. Again, this is documented in the `cbPalette`, and `cbbPalette` help pages/files.  
 
 ```{r}
 cbPalette
@@ -92,7 +92,7 @@ The first thing we want to know when analyzing data from repairable systems is w
 
 ### Duane Plots  
 
-In the package I did not specifically include a funtion to generate a Duane Plot, but given the functions I created it is easy enough to creae a Duane Plot. A Duane Plot is a plot of the **cumulative failure rate** $\left( \frac{N(t_{i})}{t_{i}} \right)$ versus the time of failure ($t_{i}$), where $t_{i}$ represents the time of the $i$th failure, and $N(t_{i})$ represents the number of failures that have occurred up to time $t_{i}$. (Some implementations of the Duane Plot suggest inverting the value of the y-axis such that $\frac{t_{i}}{N(t_{i})}$, the cumulative mean time between failure, is plotting instead of the cumulative failure rate.) The values plotted on a Duane Plot are plotted on a log-log scale. When points fall along a straight line this gives an indication that a **power-law process** is a good is a good model for the data. If the points follow an increasing or decreasing slope, or follow a constant zero-slope line this gives an indication of whether the failure rate is increasing or decreasing (this depends on whether you plot $\frac{N(t_{i})}{t_{i}}$ or $\frac{t_{i}}{N(t_{i})}$, or staying constant.  
+In the package I did not specifically include a function to generate a Duane Plot, but given the functions I created it is easy enough to create a Duane Plot. A Duane Plot is a plot of the **cumulative failure rate** $\left( \frac{N(t_{i})}{t_{i}} \right)$ versus the time of failure ($t_{i}$), where $t_{i}$ represents the time of the $i$th failure, and $N(t_{i})$ represents the number of failures that have occurred up to time $t_{i}$. (Some implementations of the Duane Plot suggest inverting the value of the y-axis such that $\frac{t_{i}}{N(t_{i})}$, the cumulative mean time between failure, is plotting instead of the cumulative failure rate.) The values plotted on a Duane Plot are plotted on a log-log scale. When points fall along a straight line this gives an informal graphical indication that a **power-law process** is a good model for the data. If the points follow an increasing or decreasing slope, or follow a constant zero-slope line this gives an indication of whether the failure rate is increasing or decreasing (this depends on whether you plot $\frac{N(t_{i})}{t_{i}}$ or $\frac{t_{i}}{N(t_{i})}$), or staying constant.  
 
 The `rocof` function, which stands for the **rate of occurrence of failures** (ROCOF), can be used to help generate a Duane Plot. The `rocof` function returns the cumulative **mean time between failure** (MTBF), and cumulative failure rate (aka ROCOF) as a data frame given the inputs of the failure times.  
 
@@ -186,7 +186,7 @@ head(amsaa_ni)
 # This would be a visual assessment of a common beta.
 ```
 
-Now, with the ROCOF calculated per system, rather than having all of the system grouped together, the Duane Plot can be created again, but this time the "colour" argument can be used to indicate the trend per system. From this it shows that all three systems are experiencing decreasing failure rates (i.e. the systems are improving), but the differences in slopes tells us it's possible that although they are all decreasing, they may not be close enough to assume they are identical. A statical test can be performed to formally test this. That will be done later on. (Note that here only the Duane Plot with the ROCOF on the y-axis was plotted, but we could have plotted the MTBF on the y-axis instead.)  
+Now, with the ROCOF calculated per system, rather than having all of the system grouped together, the Duane Plot can be created again, but this time the "colour" argument can be used to indicate the trend per system. From this it shows that all three systems are experiencing decreasing failure rates (i.e. the systems are improving), but the differences in slopes tells us it's possible that although they are all decreasing, they may not be close enough to assume they are identical. A statistical test can be performed to formally test this. That will be done later on. (Note that here only the Duane Plot with the ROCOF on the y-axis was plotted, but we could have plotted the MTBF on the y-axis instead.)  
 
 ```{r, fig.height=4, fig.width=5}
 ggplot(amsaa_ni,
@@ -233,7 +233,7 @@ tail(ttt_identical)
 # if the data follow a Power Law Process.
 ```
 
-The following code block creates the TTT plot. When the points fall alone the diagonal of the unit square this gives indication that the failure rate is constant. Points giving a concave up pattern (as we see below) indicate the failure rate is decreasing (i.e. improving), and points giving a concave down pattern indicate the failure rate is increasing (i.e. deteriorating).  
+The following code block creates the TTT plot. When the points fall along the diagonal of the unit square this gives an informal graphical indication that the failure rate is constant. Points giving a concave up pattern (as we see below) indicate the failure rate is decreasing (i.e. improving), and points giving a concave down pattern indicate the failure rate is increasing (i.e. deteriorating).  
 
 ```{r, fig.height=4, fig.width=4}
 ggplot(ttt_identical, aes(x = ttt, y = scaled_ttt)) +
@@ -303,6 +303,8 @@ ggplot(df_ttt_ni, aes(x = ttt, y = scaled_ttt, colour = System)) +
 
 ### Time Between Failures versus Time of Failure Number
 
+Plotting the time between failures versus time or failure number is another way to get a informal indication of whether the failure rate is increasing, decreasing, of remaining constant. There are no special functions required for this. Below are two plots for the: 1. the time between failures versus time, and 2. the time between failures versus failure number. Both figures appear to show that the time between failures appears to generally be increasing, indicating that the failure rate is decreasing.  
+
 ```{r, fig.height=4, fig.width=5, include=FALSE}
 # Plot Time Between Failures vs Time
 ggplot(amsaa,
@@ -354,11 +356,11 @@ ggplot(amsaa,
 
 ## Statistical Modeling
 
-Now that we have finished with some preliminary data visualization we may be interested in performing some specific statistcal tests and fitting some models.  
+Now that we have finished with some preliminary data visualization we may be interested in performing some specific statistical tests and fitting some models.  
 
 ## Test for Trend
 
-The first test is for trend in the failure rate. This was visually inspected in the plotting above, but now we can formally test for trend to see if the failure rate is constant (indicating a Homogeneous Poisson Process that can be modeled by the Expenential distribution), or increasing or decreasing (indicating a Nonhomogeneous Poisson Process). The results of the Military Handbook Test (called this due to its origin from the MIL-HDBK-189), the LaPlace Test, and the Anderson-Darling Test for Trend are all printed. Details of these tests can be found in the package documentation (see `browseVignettes("mcotear")`, the PDF named *Tests for trend in more than on repairable system*, and `?trend_test`). From the results of the tests (low p-values) we would conclude that the failure rate is not constant, and that the systems failures follow a Nonhomogeneous Poisson Process (NHPP).  
+The first test is for trend in the failure rate. This was visually inspected in the plotting above, but now we can formally test for trend to see if the failure rate is constant (indicating a Homogeneous Poisson Process that can be modeled by the Exponential distribution), or increasing or decreasing (indicating a Non-homogeneous Poisson Process). The results of the Military Handbook Test (called this due to its origin from the MIL-HDBK-189), the Laplace Test, and the Anderson-Darling Test for Trend are all printed. Details of these tests can be found in the package documentation (see `browseVignettes("mcotear")`, the PDF named *Tests for trend in more than on repairable system*, and `?trend_test`). From the results of the tests (low p-values) we would conclude that the failure rate is not constant, and that the systems' failures follow a Non-homogeneous Poisson Process (NHPP).  
 
 ```{r}
 trend_test(
@@ -381,7 +383,7 @@ trend_test(
 
 ## Fitting a Power Law Process
 
-Since the data indicates that the times between failure are not constant (i.e. are not consistent with a Homogeneous Poisson Process (HPP)) a NHPP should be used to describe the times between failure rather than methods applicable to the exponential distribution. Below the `power_law_prcess` function is used to estimate the parameters of a NHPP with a power law intensity fucntion. (Note that the "alpha" argument current does nothing. The intent is for this to lead to confidence intervals in future versions of the package. Also, the "iter" argument is only applicable to failure truncated data.) The "beta" parameter ($\beta$) affects how the system deteriorates or improves over time. $\beta > 1$ indicates the intensity function is increasing, i.e. that failures are occurring more frequently, the system is deteriorating. $\beta < 1$ indicates the intensity function is decreasing, i.e. that failures are occurring less frequently, the system is improving. $\beta = 1$ indicates the intensity function is constant and the power law process reduces to the HPP.  The estimated $\beta$ value of 0.615 (with 95/% interval not containing 1) indicates that the failure rate is decreasing.  
+Since the data indicates that the times between failure are not constant (i.e. are not consistent with a Homogeneous Poisson Process (HPP)) a NHPP should be used to describe the times between failure rather than methods applicable to the exponential distribution. Below the `power_law_prcess` function is used to estimate the parameters of a NHPP with a power law intensity function. (Note that the "iter" argument is only applicable to failure truncated data.) The "beta" parameter ($\beta$) affects how the system deteriorates or improves over time. $\beta > 1$ indicates the intensity function is increasing, i.e. that failures are occurring more frequently, the system is deteriorating. $\beta < 1$ indicates the intensity function is decreasing, i.e. that failures are occurring less frequently, the system is improving. $\beta = 1$ indicates the intensity function is constant and the power law process reduces to the HPP.  
 
 ```{r}
 (m <- power_law_process(
@@ -411,7 +413,11 @@ Since the data indicates that the times between failure are not constant (i.e. a
 # will then depend upon alpha.
 ```
 
+The estimated $\beta$ value of `r round(m$est[[2]], 3)` indicates that the failure rate is decreasing. The 95% confidence interval for $\beta$ does not contain 1. This indicates, just as the trend tests from above did, that the failure rate is not constant and a HPP must be rejected in favor of a NHPP. The "beta.converge" and "lambda.converge" results can be ignored in this case as those are only applicable to failure truncated data when an iterative calculation procedure must be used. The purpose of those values to see that the $\beta$ and $\lambda$ estimates have stabilized, in other words, that they are not still changing when we truncate the iterative calculation procedure.
+
 ## Test for Common Shape Parameter
+
+The power law process fit above assumes that the three systems have identical failure rates. From the plots above we observed that all three systems had decreasing failure rates, but there were differences in them. Now we formally test if the differences observed are large enough to suggest they did not come from systems with identical failure rates. The `common_beta` function tests the null hypothesis that the systems have the same failure rate, versus the alternative hypothesis that they do not have the same failure rate. Small p-values reject the null hypothesis suggesting that the systems do not share a common failure rate.  
 
 ```{r}
 common_beta(
@@ -422,20 +428,27 @@ common_beta(
 # of a common shape parameter
 ```
 
+Based on the p-value from the test of `r round(common_beta(t = t, T = T_time_trunc, fail.trunc = FALSE)$"P-Value",3)` we do not have enough evidence to reject the null hypothesis.
+
+## Mean Cumulative Function  
+
+The *mean cumulative function* (mcf) is a non-decreasing function that indicates the expected number of failures through time _t_. In the `mcotear` package I have implemented the `power_law_mcf` and `mcf` functions. The `power_law_mcf` provides an estimate of the expected number of failures at specified times based on $\lambda$ and $\beta$ values from a power law process. Below I pass the failure times for all three systems, along with the estimated $\lambda$ and $\beta$ values obtained earlier from the `power_law_process` function.  
+
 ```{r}
-power_law_mcf(t = amsaa$Time, m$est[1], m$est[2])
+power_law_mcf(t = t, m$est[1], m$est[2])
 # power_law_mcf(t = list(amsaa$Time), m$est[1], m$est[2])
 # power_law_mcf(t = split(amsaa$Time, amsaa$System), m$est[1], m$est[2])
-# Any one of these work. These values themselves
-# are not real useful. This function is more
+# Any one of these work. This function can
 # useful in plotting the function versus the
 # observed/emperical mcf estimates so you can 
-# visually assess if the model fits the data.
+# visually assess how well the model fits the data.
 ```
+
+The `mcf` function provides a non-parametric estimate of the mcf. For this function, all we need to provide is the failure times, and if applicable, a "by" variable which indicates what variable if we need to split the data (for example `mcf(t = t, by = names(t)` would split the data so we get a mcf per system, instead of a combined mcf that treats the systems as one).  
 
 ```{r}
 df_mcf <- mcf(t = t, by = NULL)
-head(df_mcf)
+#head(df_mcf)
 names(df_mcf)[1] <- "Time"
 head(df_mcf)
 # Get the nonparametric mcf estimates.
@@ -446,12 +459,16 @@ head(df_mcf)
 # in the amsaa data set.
 ```
 
+If desired we can merge the mcf estimates with our data. I do this below, merging the non-parametric mcf estimates with the larger data frame.  
+
 ```{r}
 amsaa_identical <- merge(amsaa_identical, df_mcf, by = "Time")
 head(amsaa_identical)
 # Merge the nonparametric mcf estimates
 # with amsaa into a new data.frame amsaa1
 ```
+
+Using the merged data and passing the `power_law_mcf` function to ggplot's `stat_function` I am able to plot the non-parametric mcf along with the curve for the estimated mcf based on the power law process.  
 
 ```{r, fig.height=4, fig.width=4}
 #dev.new(height = 4, width = 4)
@@ -480,11 +497,11 @@ ggplot(amsaa_identical, aes(x = Time, y = mcf)) +
     legend.text = element_text(size=8),
     legend.title=element_text(size=10)
   )
-# setwd("C:/Users/ThinkPad_User_003/Desktop/Analysis of Repairable Systems")
+# setwd("C:/Users/MCOTEA_User_001/Desktop/Analysis of Repairable Systems")
 # ggsave("AMSAA_MCF.png", dpi = 300, height = 4, width = 4)
 # Mean Cumulative Function Plot
 # Looks like the data fits pretty well.
-# I show how you can set your working directoy
+# I show how you can set your working directory
 # and save the plot to file.
 ```
 
