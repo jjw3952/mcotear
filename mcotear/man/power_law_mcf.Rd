@@ -47,7 +47,7 @@ data(cbPalette)
  # and change the name of "t" to "Time"
  # so it matches with the name in the 
  # amsaa data set
-df_mcf <- mcf(t = split(amsaa$Time, amsaa$System))
+df_mcf <- mcf(t = split(amsaa$Time, list(200,200,200), amsaa$System))
 names(df_mcf)[1] <- "Time"
 
 # Merge the nonparametric mcf estimates
@@ -87,6 +87,7 @@ ggplot(amsaa1, aes(x = Time, y = mcf)) +
 
 }
 \seealso{
-\code{\link{power_law_process}}, \code{\link{mcf}},
- \code{\link{trend_test}}, \code{\link{ttt}}, \code{\link{common_beta}}
+\code{\link{power_law_process}}, \code{\link{mcf}}, \code{\link{rocof}},
+ \code{\link{power_law_intensity}}, \code{\link{trend_test}}, \code{\link{ttt}}, 
+ \code{\link{common_beta}}
 }

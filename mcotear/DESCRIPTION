@@ -1,12 +1,14 @@
 Package: mcotear
 Title: Contains helpful functions for use within MCOTEA
-Version: 0.0.0.9000
+Version: 0.0.1.0000
 Authors@R: person("Jacob", "Warren", email = "jacob.j.warren@usmc.mil",
                   role = c("aut", "cre"))
 Description: Contains several functions that document commonly used tasks with
     MCOTEA. The intent is to formally document such tasks in a consolidated
     location that is easily distributed, and easily accessible in order to
     reduce re-work (re-creation) of already developed tasks.
+Author: Jacob Warren [aut]
+Maintainer: Jacob Warren <jacob.j.warren@usmc.mil>
 Depends:
     R (>= 3.4.1),
     ggplot2,

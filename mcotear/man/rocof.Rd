@@ -61,6 +61,7 @@ ggplot(df,
 
 }
 \seealso{
-\code{\link{power_law_process}}, \code{\link{power_law_mcf}},
-  \code{\link{trend_test}}, \code{\link{ttt}}, \code{\link{common_beta}}
+\code{\link{power_law_process}}, \code{\link{power_law_intensity}},
+  \code{\link{power_law_mcf}}, \code{\link{mcf}}, \code{\link{trend_test}}, 
+  \code{\link{ttt}}, \code{\link{common_beta}}
 }

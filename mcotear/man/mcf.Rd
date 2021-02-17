@@ -4,12 +4,17 @@
 \alias{mcf}
 \title{Nonparametric Estimate for the Mean Cumulative Function}
 \usage{
-mcf(t, by = NULL)
+mcf(t, T, by = NULL)
 }
 \arguments{
 \item{t}{A list of failure time vectors. Each vector should indicate
 a different system, i.e. if you have multiple systems each
 systems' failure times should be in it's own vector.}
+
+\item{T}{A list of Total Time on Test (TTT) (i.e. test duration) vectors.
+The vectors in the list should be of length 1, and each vector should
+indicate a different system, i.e. if you have multiple systems each
+systems' TTT should be in it's own vector.}
 
 \item{by}{If providing a list of length > 1 this can be
 a vector that defines a name for each element of the list
@@ -27,8 +32,25 @@ The output will be a \code{\link[base]{data.frame}} containing,
 \examples{
 data(amsaa)
 
-# Three systems failure times.
-mcf(t = split(amsaa$Time, amsaa$System))
+mcf(
+  t = split(amsaa$Time, amsaa$System),
+  T = list(200,200,200),
+  by = NULL)
+
+mcf(
+  t = split(amsaa$Time, amsaa$System),
+  T = list(200,200,200),
+  by = names(split(amsaa$Time, amsaa$System)))
+
+mcf(
+  t = split(amsaa$Time, amsaa$System),
+  T = list(197.2,190.8,195.8),
+  by = names(split(amsaa$Time, amsaa$System)))
+
+mcf(
+  t = split(df$Time, df$System),
+  T = list(197.2,190.8,195.8),
+  by = NULL)
 
 }
 \seealso{

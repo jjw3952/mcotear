@@ -4,10 +4,10 @@
 \alias{test_duration}
 \title{Calculates the required test length to meet a MTBF (Reliability) requirement}
 \usage{
-test_duration(n, mtbf, conf = 0.8)
+test_duration(r, mtbf, conf = 0.8)
 }
 \arguments{
-\item{n}{A numeric vector indicating the allowable number of failures.}
+\item{r}{A numeric vector indicating the allowable number of failures.}
 
 \item{mtbf}{A numeric Mean Time Between Failure requirement.
 This could be time, miles, rounds, etc.}
@@ -33,10 +33,11 @@ The output will be a two column \code{data.frame}
 \examples{
 # What is the required test duration to demonstrate the MTBF is at least
   # 228 hours, given 0:5 failures, and 80\% confidence?
-test_duration(n = 0:5, mtbf = 228, conf = 0.80)
+test_duration(r = 0:5, mtbf = 228, conf = 0.80)
 
 }
 \seealso{
 \code{\link{mtbf_req}}, \code{\link{reliability_req}},
-  \code{\link{exp_mean_lcb}}
+  \code{\link{exp_mean_lcb}}, \code{\link{test_demo}},
+  \code{\link{exp_equal_mtbf}}
 }

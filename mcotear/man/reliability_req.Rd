@@ -34,5 +34,6 @@ reliability_req(mtbf = 228, md = 24)
 }
 \seealso{
 \code{\link{mtbf_req}}, \code{\link{test_duration}},
-  \code{\link{exp_mean_lcb}}
+  \code{\link{exp_mean_lcb}}, \code{\link{test_demo}},
+  \code{\link{exp_equal_mtbf}}
 }

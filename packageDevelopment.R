@@ -8,8 +8,8 @@ library(knitr)
 
 # Set working directory to where you want the package stored
 # and create the package
-setwd("C:/Users/ThinkPad_User_003/Desktop/R")
-devtools::create("mcotear")
+#setwd("C:/Users/ThinkPad_User_003/Desktop/R")
+#devtools::create("mcotear")
 
 # package?devtools
 # ls("package:devtools")
@@ -26,7 +26,7 @@ use_package("gridExtra")
 use_package("goftest")
 
 
-setwd("C:/Users/ThinkPad_User_003/Desktop/R Development 3.5.2/mcotear/data")
+#setwd("C:/Users/ThinkPad_User_003/Desktop/R Development 3.5.2/mcotear/data")
 #save(amsaa, file = "amsaa.Rdata")
 
 cbPalette <- c("#999999", "#E69F00", "#56B4E9",
@@ -43,7 +43,8 @@ document()
 build_vignettes()
 build()
 #install()
-install.packages("C:/Users/MCOTEA_User_001/Documents/GitHub/mcotear/mcotear_0.0.0.9000.tar.gz")
+#install.packages("C:/Users/MCOTEA_User_001/Documents/GitHub/mcotear/mcotear_0.0.0.9000.tar.gz")
+install.packages("C:/Users/MCOTEA_User_001/Documents/GitHub/mcotear/mcotear_0.0.1.0000.tar.gz")
 
 #install.packages("C:/Users/ThinkPad_User_003/Desktop/R Development 3.5.2/mcotear_0.0.0.9000.tar.gz", repos = NULL, type="source")
 

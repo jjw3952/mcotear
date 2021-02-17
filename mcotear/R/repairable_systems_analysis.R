@@ -60,12 +60,19 @@ power_law_process <- function(t, T, alpha = 0.05, fail.trunc = FALSE, iter = 10)
   ## MLEs, beta is shape, lambda is scale
 
   # Total number of failures
-  (n <- length(unlist(t)))
+  #(n <- length(unlist(t)))
+  (n <- sum(!is.na(unlist(t))))
 
   # Maximum likelihood estimate for beta
+  #(beta.hat <- n / sum(
+  #  rep(unlist( lapply(T, log)) , times = unlist( lapply(t, length) )) - 
+  #  unlist( lapply(t, log) )
+  #))
   (beta.hat <- n / sum(
-    rep(unlist( lapply(T, log)) , times = unlist( lapply(t, length) )) - 
-    unlist( lapply(t, log) )
+    rep(
+      unlist( lapply(T[!is.na(t)], log)),
+      times = unlist( lapply(t[!is.na(t)], length) )) - 
+    unlist( lapply(t[!is.na(t)], log) )
   ))
 
   # This works but I expect it to be slower ----------
@@ -76,7 +83,7 @@ power_law_process <- function(t, T, alpha = 0.05, fail.trunc = FALSE, iter = 10)
   #  (beta.hat <- n/sum(d))
   #---------------------------------------------------
 
-  if(fail.trunc == TRUE){
+  if(fail.trunc == TRUE | (sum(is.na(unlist(t))) > 0) ){
     lambda.hat <- NULL
 
     # Iteratively solving for lambda.hat & beta.hat for failure truncated tests
@@ -85,7 +92,7 @@ power_law_process <- function(t, T, alpha = 0.05, fail.trunc = FALSE, iter = 10)
 
       beta.hat[i] <- n / (lambda.hat[length(lambda.hat)] *
         sum( unlist(T)^beta.hat[length(beta.hat)] * log(unlist(T)) ) - 
-        sum(log(unlist(t))))
+        sum(log(unlist(t[!is.na(t)]))))
     }
 
   } else
@@ -158,12 +165,16 @@ power_law_process <- function(t, T, alpha = 0.05, fail.trunc = FALSE, iter = 10)
   #row.names(ci.df)[1:2] <- c("beta","lambda")
   row.names(ci.df)[1] <- c("beta")
 
+  # unbiased beta
+  unbiased.beta <- ((n-1)*beta.hat[length(beta.hat)])/n
+
   return(
     list(
       "estimates" = c(
         "lambda" = lambda.hat2,
         "beta" = beta.hat[length(beta.hat)]
       ),
+      "unbiased.beta" = unbiased.beta,
       "CIs" = ci.df,
       "beta.convergence" = beta.hat,
       "lambda.convergence" = lambda.hat
@@ -183,6 +194,10 @@ power_law_process <- function(t, T, alpha = 0.05, fail.trunc = FALSE, iter = 10)
 #' @param t A list of failure time vectors. Each vector should indicate
 #'   a different system, i.e. if you have multiple systems each
 #'   systems' failure times should be in it's own vector.
+#' @param T A list of Total Time on Test (TTT) (i.e. test duration) vectors.
+#'   The vectors in the list should be of length 1, and each vector should
+#'   indicate a different system, i.e. if you have multiple systems each
+#'   systems' TTT should be in it's own vector.
 #' @param by If providing a list of length > 1 this can be
 #'   a vector that defines a name for each element of the list
 #'   so as to return by system mcf estimates.
@@ -196,27 +211,56 @@ power_law_process <- function(t, T, alpha = 0.05, fail.trunc = FALSE, iter = 10)
 #'
 #' @examples
 #' data(amsaa)
-#'
-#' # Three systems failure times.
-#' mcf(t = split(amsaa$Time, amsaa$System))
-#'
+#' 
+#' mcf(
+#'   t = split(amsaa$Time, amsaa$System),
+#'   T = list(200,200,200),
+#'   by = NULL)
+#' 
+#' mcf(
+#'   t = split(amsaa$Time, amsaa$System),
+#'   T = list(200,200,200),
+#'   by = names(split(amsaa$Time, amsaa$System)))
+#' 
+#' mcf(
+#'   t = split(amsaa$Time, amsaa$System),
+#'   T = list(197.2,190.8,195.8),
+#'   by = names(split(amsaa$Time, amsaa$System)))
+#' 
+#' mcf(
+#'   t = split(df$Time, df$System),
+#'   T = list(197.2,190.8,195.8),
+#'   by = NULL)
+#' 
 #' @export
-mcf <- function(t, by = NULL){
+mcf <- function(t, T, by = NULL){
 
   if(is.null(by)){
 
   (k <- length(t))         # number of systems
-  t <- unlist(t, use.names = F)
-  (n <- length(t))         # number of failures
+  t <- unlist(t[!is.na(t)], use.names = F)
+  (n <- length(t[!is.na(t)]))         # number of failures
 
   # Find position of failure times that occur more than once
-  dups <- rev(which(duplicated(t[order(t)]) == TRUE))
-  mcf <- seq(n/k/n, n/k, length.out = n)
-  
-  for(i in seq_along(dups)){
-    mcf[dups[i]-1] <- mcf[dups[i]]
+  #  dups <- rev(which(duplicated(t[order(t)]) == TRUE))
+  #  dups
+
+  t.sort <- sort(unique(t))
+  #i <- 1
+  mcf <- NULL
+  for(i in seq_along(t.sort)){
+    mcf[i] <- length(which(t == t.sort[i])) / length(which(T >= t.sort[i]))
   }
-  df <- data.frame(t = sort(t), mcf)
+  mcf
+  
+  df <- data.frame(t = t.sort, mcf = cumsum(mcf))
+
+  #mcf <- seq(n/k/n, n/k, length.out = n)
+  
+  #for(i in seq_along(dups)){
+  #  mcf[dups[i]-1] <- mcf[dups[i]]
+  #}
+  #df <- data.frame(t = sort(t), mcf)
 
 
   } else{
@@ -240,6 +284,7 @@ mcf <- function(t, by = NULL){
   }
 
   df <- data.frame(by = rep(by, lapply(out, length)), t = unlist(t), mcf = unlist(out))
+  df$mcf[which(is.na(df$t))] <- 0
 
   }
 
@@ -274,8 +319,9 @@ mcf <- function(t, by = NULL){
 #'   the ordered failure times ("t") and corresponding Power Law
 #'    mcf values ("power_mcf").
 #'
-#' @seealso \code{\link{power_law_process}}, \code{\link{mcf}},
-#'  \code{\link{trend_test}}, \code{\link{ttt}}, \code{\link{common_beta}}
+#' @seealso \code{\link{power_law_process}}, \code{\link{mcf}}, \code{\link{rocof}},
+#'  \code{\link{power_law_intensity}}, \code{\link{trend_test}}, \code{\link{ttt}}, 
+#'  \code{\link{common_beta}}
 #'
 #' @examples
 #' data(amsaa)
@@ -294,7 +340,7 @@ mcf <- function(t, by = NULL){
 #'  # and change the name of "t" to "Time"
 #'  # so it matches with the name in the 
 #'  # amsaa data set
-#' df_mcf <- mcf(t = split(amsaa$Time, amsaa$System))
+#' df_mcf <- mcf(t = split(amsaa$Time, list(200,200,200), amsaa$System))
 #' names(df_mcf)[1] <- "Time"
 #'
 #' # Merge the nonparametric mcf estimates
@@ -373,8 +419,9 @@ power_law_mcf <- function(t, lambda, beta){
 #'   and the corresponding nonparametric estimates for the instantaneous
 #'   rocof and mtbf.
 #'
-#' @seealso \code{\link{power_law_process}}, \code{\link{power_law_mcf}},
-#'   \code{\link{trend_test}}, \code{\link{ttt}}, \code{\link{common_beta}}
+#' @seealso \code{\link{power_law_process}}, \code{\link{power_law_intensity}},
+#'   \code{\link{power_law_mcf}}, \code{\link{mcf}}, \code{\link{trend_test}}, 
+#'   \code{\link{ttt}}, \code{\link{common_beta}}
 #'
 #' @examples
 #' data(amsaa)
@@ -472,7 +519,7 @@ rocof <- function(t, by = NULL){
 #'   the ordered failure times ("t") and corresponding Power Law
 #'    intensity values ("power_intensity").
 #'
-#' @seealso \code{\link{power_law_process}}, \code{\link{mcf}},
+#' @seealso \code{\link{power_law_process}}, \code{\link{mcf}}, \code{\link{rocof}},
 #'  \code{\link{power_law_mcf}}, \code{\link{trend_test}},
 #'  \code{\link{ttt}}, \code{\link{common_beta}}
 #'
@@ -493,7 +540,7 @@ rocof <- function(t, by = NULL){
 #'  # and change the name of "t" to "Time"
 #'  # so it matches with the name in the 
 #'  # amsaa data set
-#' df_mcf <- mcf(t = split(amsaa$Time, amsaa$System))
+#' df_mcf <- mcf(t = split(amsaa$Time, list(200,200,200), amsaa$System))
 #' names(df_mcf)[1] <- "Time"
 #'
 #' # Merge the nonparametric mcf estimates
@@ -508,7 +555,7 @@ rocof <- function(t, by = NULL){
 #' @export
 power_law_intensity <- function(t, lambda, beta){
   # Intensity Function, ROCOF
-  # Expected Number of Failures at Time t
+  # Expected Failure Rate at Time t
 
   t <- sort(unlist(t, use.names = FALSE))
   intensity <- (beta/lambda)*(t/lambda)^(beta-1)
@@ -734,6 +781,10 @@ trend_test <- function(t, T, fail.trunc = TRUE){
 
 
 
+
+
+
+
 #' Total Time on Test for Repairable Systems
 #'
 #' \code{ttt} calculates the scaled total time on test (TTT) as described in
@@ -832,6 +883,10 @@ ttt <- function(t, T, fail.trunc = FALSE){
 
   return(df)
 }
+
+
+
+
 
 
 

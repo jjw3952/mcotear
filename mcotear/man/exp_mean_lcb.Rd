@@ -35,5 +35,6 @@ exp_mean_lcb(n = 0, duration = 367, conf = 0.80)
 }
 \seealso{
 \code{\link{mtbf_req}}, \code{\link{reliability_req}},
-  \code{\link{test_duration}}
+  \code{\link{test_duration}}, \code{\link{test_demo}},
+  \code{\link{exp_equal_mtbf}}
 }
