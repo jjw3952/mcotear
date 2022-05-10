@@ -1,7 +1,0 @@
-\documentclass{article}
-\usepackage{pdfpages}
-%\VignetteIndexEntry{AMSAA Technical Report No. 138, Reliability Analysis for Complex Repairable Systems}
-
-\begin{document}
-\includepdf[pages=-, fitpaper=true]{AMSAA_CROW.pdf}
-\end{document}

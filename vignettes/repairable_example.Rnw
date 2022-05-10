@@ -1,0 +1,7 @@
+\documentclass{article}
+\usepackage{pdfpages}
+%\VignetteIndexEntry{Analysis of Repairable Systems with mcotear - An Example of Package Use}
+
+\begin{document}
+\includepdf[pages=-, fitpaper=true]{repairable_mcotear.pdf}
+\end{document}
