@@ -22,4 +22,4 @@ Imports:
     ggplot2,
     gridExtra,
     goftest
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.2

@@ -15,7 +15,7 @@ exp_equal_mtbf(T, r)
 The output is a list with the p-value and interpretation help.
 }
 \description{
-\code{exp_equal_mtbf} campares MTBF parameters from exponential distributions
+\code{exp_equal_mtbf} compares MTBF parameters from exponential distributions
   and returns the p-value.
 }
 \examples{
@@ -28,6 +28,6 @@ The output is a list with the p-value and interpretation help.
 }
 \seealso{
 \code{\link{mtbf_req}}, \code{\link{reliability_req}},
-  \code{\link{test_duration}}, \code{\link{exp_mean_lcb}}
+  \code{\link{test_duration}}, \code{\link{exp_mean_lcb}},
   \code{\link{test_demo}}
 }

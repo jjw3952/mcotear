@@ -23,8 +23,8 @@ The output will be a numeric vector, indicating the LCB of
 \description{
 \code{exp_mean_lcb} calculates the lower confidence bound (LCB)
   for an exponential mean given a test duration (hours, miles,
-  rounds, etc.), confidence level, and assuming the test is
-  time terminated.
+  rounds, etc.), number of failures, confidence level, and assuming
+  the test is time terminated.
 }
 \examples{
 # What is the 80\% LCB for the MTBF (assuming the times between 

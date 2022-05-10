@@ -4,7 +4,9 @@
 \name{cbbPalette}
 \alias{cbbPalette}
 \title{A colorblind-friendly palette with black}
-\format{An object of class \code{character} of length 8.}
+\format{
+An object of class \code{character} of length 8.
+}
 \usage{
 cbbPalette
 }

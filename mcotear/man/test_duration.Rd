@@ -17,7 +17,7 @@ default is set to 0.80).}
 }
 \value{
 The output will be a two column \code{data.frame}
-  with one column as the number of failures, 
+  with one column as the allowable number of failures, 
   and the second column defining the required test
   duration (in the same units as the \code{mtbf} parameter), needed
   to satisfy the MTBF requirement with the given level of confidence,
@@ -39,5 +39,5 @@ test_duration(r = 0:5, mtbf = 228, conf = 0.80)
 \seealso{
 \code{\link{mtbf_req}}, \code{\link{reliability_req}},
   \code{\link{exp_mean_lcb}}, \code{\link{test_demo}},
-  \code{\link{exp_equal_mtbf}}
+  \code{\link{exp_equal_mtbf}}, \code{\link{exp_oc}}
 }

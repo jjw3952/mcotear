@@ -15,7 +15,8 @@ rel_power(mtbf0, mtbf1, r = 1, alpha = 0.2)
 \item{r}{The allowable number of failures.}
 
 \item{alpha}{The desired level of significance (type 1 error rate) (values
-within 0.0:1.00, default is set to 0.20).}
+within 0.0:1.00, default is set to 0.20) (producer's risk - the probability we reject
+a system with MTBF = mtbf1).}
 }
 \value{
 The output is a numeric value representing the power of rejecting
@@ -50,15 +51,15 @@ ggplot2::ggplot(df) +
   ggplot2::scale_colour_manual("", values = cbbPalette) +
   ggplot2::scale_y_continuous(limits = c(0,1), breaks = seq(0,1,.2)) +
   ggplot2::labs(
-   y = "Probability of Passing Demonstration\\n(Power)",
+   y = "Probability of Passing Demonstration\n(Power)",
    x = "True MTBOMF",
-   caption = "r = Allowable Failures\\nT = Total Test Time Required (hours)\\n\\nConfidence set to 80\%\\nMTBF0 = 180 hours"
+   caption = "r = Allowable Failures\nT = Total Test Time Required (hours)\n\nConfidence set to 80\%\nMTBF0 = 180 hours"
   ) +
   ggplot2::theme(plot.caption = element_text(hjust = 0))
 
 }
 \seealso{
 \code{\link{mtbf_req}}, \code{\link{reliability_req}},
-  \code{\link{test_duration}}, \code{\link{exp_mean_lcb}}
-  \code{\link{test_demo}}, \code{\link{exp_equal_mtbf}}
+  \code{\link{test_duration}}, \code{\link{exp_mean_lcb}},
+  \code{\link{test_demo}}, \code{\link{exp_equal_mtbf}}, \code{\link{exp_oc}}
 }
