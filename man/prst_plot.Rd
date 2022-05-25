@@ -48,7 +48,7 @@ The output will return \code{r} = the number of failures at which
   and creates the plot of the results and defined parameters.
 }
 \examples{
-prst_plot(r=NULL,t=NULL,MTBF0, MTBFA, alpha=.1, beta=.1)
+prst_plot(r=NULL,t=NULL,MTBF0=100, MTBFA=200, alpha=.1, beta=.1)
 prst_plot(
   r = c(0,1,2,3,4,5,6,6,14),
   t = c(0,100,150,200,250,275,300,1500,2060),

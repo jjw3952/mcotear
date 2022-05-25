@@ -27,7 +27,7 @@
 #' @seealso \code{\link{weibull_scale}}, \code{\link{weibull_mean}}
 #'
 #' @references
-#' Determining the Right Sample Size for Your Test: Theory and Application \href{https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwi79beh0vr3AhXhrHIEHQ0TDp8QFnoECAUQAQ&url=https%3A%2F%2Fwww.weibull.com%2Fpubs%2F2013_RAMS_determining_right_sample_size.pdf&usg=AOvVaw13YxB76WJjjzoFbfCb_5z0}{2015 Annual Reliability and Maintainability Symposium}
+#' Determining the Right Sample Size for Your Test: Theory and Application \href{https://www.weibull.com/pubs/2015_RAMS_right_sample_size.pdf}{2015 Annual Reliability and Maintainability Symposium}
 #'
 #' @examples
 #' # What is the required sample size given 1 allowable failure

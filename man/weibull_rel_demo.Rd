@@ -67,7 +67,7 @@ test_duration(r = 0, mtbf = 8962.84, conf = .9)
 
 }
 \references{
-
+Determining the Right Sample Size for Your Test: Theory and Application \href{https://www.weibull.com/pubs/2015_RAMS_right_sample_size.pdf}{2015 Annual Reliability and Maintainability Symposium}
 }
 \seealso{
 \code{\link{weibull_scale}}, \code{\link{weibull_mean}}

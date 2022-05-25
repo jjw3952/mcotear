@@ -10,7 +10,7 @@
 #' @param aldt Administrative and Logistics Down Time.
 #'
 #' @return The output will be a numeric value for the unput passed as NA.
-#'\
+#'
 #' @seealso \code{\link{ai_from_ao}}, \code{\link{ao_keesee}},
 #'   \code{\link{ao_keesee_test_duration}}
 #'

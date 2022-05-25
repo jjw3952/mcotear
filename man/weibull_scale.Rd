@@ -27,7 +27,7 @@ weibull_scale(2000, .8, 2)
 
 }
 \references{
-
+Determining the Right Sample Size for Your Test: Theory and Application \href{https://www.weibull.com/pubs/2015_RAMS_right_sample_size.pdf}{2015 Annual Reliability and Maintainability Symposium}
 }
 \seealso{
 \code{\link{weibull_mean}}

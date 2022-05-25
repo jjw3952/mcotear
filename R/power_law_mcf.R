@@ -40,7 +40,9 @@
 #'  # and change the name of "t" to "Time"
 #'  # so it matches with the name in the 
 #'  # amsaa data set
-#' df_mcf <- mcf(t = split(amsaa$Time, list(200,200,200), amsaa$System))
+#' df_mcf <- mcf(
+#'   t = split(amsaa$Time, amsaa$System),
+#'   T = list(200,200,200))
 #' names(df_mcf)[1] <- "Time"
 #'
 #' # Merge the nonparametric mcf estimates

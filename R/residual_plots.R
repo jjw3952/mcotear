@@ -30,8 +30,7 @@
 #' residual_plots(npk.table)
 #'
 #' @export
-residual_plots <- function(
-  x, ...){
+residual_plots <- function(x, ...){
 
   res <- x[,1]
   fit <- x[,2]

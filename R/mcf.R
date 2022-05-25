@@ -40,7 +40,7 @@
 #'   by = names(split(amsaa$Time, amsaa$System)))
 #' 
 #' mcf(
-#'   t = split(df$Time, df$System),
+#'   t = split(amsaa$Time, amsaa$System),
 #'   T = list(197.2,190.8,195.8),
 #'   by = NULL)
 #' 

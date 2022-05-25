@@ -32,9 +32,9 @@ The output will be a numeric vector giving the required Up Time,
   Mean ALDT (MLDT), and the number of observed ALDTs).
 }
 \examples{
-ao_keesee_test_duration(n=1, m=1, mttr=1, ao_lcb=.83, alpha = .4)
-ao_keesee_test_duration(n=2, m=2, mttr=10.8+40.4, ao_lcb=.83, alpha = .4)
-ao_keesee_test_duration(n=2, m=2, mttr=10.8, ao_lcb=0.9585852, alpha = .4)
+ao_keesee_test_duration(n=1, m=1, mttr=1, ao=.83, alpha = .4)
+ao_keesee_test_duration(n=2, m=2, mttr=10.8+40.4, ao=.83, alpha = .4)
+ao_keesee_test_duration(n=2, m=2, mttr=10.8, ao=0.9585852, alpha = .4)
 
 }
 \references{

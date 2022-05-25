@@ -20,9 +20,9 @@
 #'   \code{\link{ao_keesee}}
 #'
 #' @examples
-#' ao_keesee_test_duration(n=1, m=1, mttr=1, ao_lcb=.83, alpha = .4)
-#' ao_keesee_test_duration(n=2, m=2, mttr=10.8+40.4, ao_lcb=.83, alpha = .4)
-#' ao_keesee_test_duration(n=2, m=2, mttr=10.8, ao_lcb=0.9585852, alpha = .4)
+#' ao_keesee_test_duration(n=1, m=1, mttr=1, ao=.83, alpha = .4)
+#' ao_keesee_test_duration(n=2, m=2, mttr=10.8+40.4, ao=.83, alpha = .4)
+#' ao_keesee_test_duration(n=2, m=2, mttr=10.8, ao=0.9585852, alpha = .4)
 #' 
 #' @references
 #' Keesee, W.R. A Method of Determining a Confidence Interval for Availability. 1965. url{https://apps.dtic.mil/sti/citations/AD0617716}

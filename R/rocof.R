@@ -31,7 +31,7 @@
 #'
 #' ggplot(df,
 #'   aes(
-#'     x = t
+#'     x = t,
 #'     y = rocof)) +
 #'   scale_x_log10() +
 #'   scale_y_log10() +
@@ -43,7 +43,7 @@
 #' 
 #' ggplot(df,
 #'   aes(
-#'     x = t
+#'     x = t,
 #'     y = mtbf)) +
 #'   scale_x_log10() +
 #'   scale_y_log10() +
@@ -55,7 +55,6 @@
 #'
 #' @export
 rocof <- function(t, by = NULL){
-  
 
   if(is.null(by)){
     tsort <- sort(unlist(t))
