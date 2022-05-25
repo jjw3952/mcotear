@@ -22,7 +22,7 @@ The output will be a numeric value indicating the Weibull mean.
 }
 \examples{
 # What is the scale parameter of a Weibull distribution with shape 2 in which there
-  is 80\% probability of surviving a mission of 2000 hours?
+  # is 80\% probability of surviving a mission of 2000 hours?
 weibull_scale(2000, .8, 2)
 
 }
