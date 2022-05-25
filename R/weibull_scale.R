@@ -22,7 +22,7 @@
 #' @export
 weibull_scale <- function(md, R_m, shape){
 
-  if(R_m <= 0 | R_m >= 1){
+  if(any(R_m <= 0 | R_m >= 1)){
     stop("R_m must be a probability between 0 and 1.")
   }
 
