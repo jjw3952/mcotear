@@ -10,6 +10,8 @@ Install `mcotear` from Github with `devtools`:
 ``` r
 library(devtools)
 devtools::install_github("jjw3952/mcotear")
+# or if you want the vignettes
+# devtools::install_github("jjw3952/mcotear", build_vignettes = TRUE)
 library(mcotear)
 ```
 
@@ -20,7 +22,8 @@ Here are some things to try to get started.
 
 ``` r
 library(mcotear)
-ls("package:mcotear")
+(functions <- ls("package:mcotear"))
+length(functions)
+example(functions[14], character.only = FALSE)
 browseVignettes("mcotear")
-example(exp_oc)
 ```
