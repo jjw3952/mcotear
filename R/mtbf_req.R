@@ -1,0 +1,30 @@
+#' Calculates the Mean Time Between Failure (MTBF) Requirement
+#'
+#' \code{mtbf_req} calculates the Mean Time Between Failure
+#'   (MTBF) requirement based on a defined Reliability requirement,
+#'   and mission duration. (Instead of Time, Miles, Rounds, etc. may be used.)
+#'   This assumes the times (miles, rounds, etc.) between failure
+#'   are exponentially distributed.
+#'
+#' @param r A numeric Reliability requirement (0.00:1.00).
+#' @param md A numeric mission duration. This could be time, miles, rounds, etc. 
+#'
+#' @return The output will be a numeric vector with units the same
+#'   as the mission duration.
+#'
+#' @seealso \code{\link{reliability_req}}, \code{\link{test_duration}},
+#'   \code{\link{exp_mean_lcb}}, \code{\link{test_demo}}
+#'
+#' @examples
+#' # What is the required MTBF to have a 90% prob of
+#'   # completing a 24 hour mission duration?
+#' mtbf_req(r = .9, md = 24)
+#'
+#' @export
+mtbf_req <- function(rel, md){
+  if(rel >=1 | rel <= 0){
+    stop("rel must be a probability between 0 and 1")
+  }
+
+  -md/log(rel)
+}

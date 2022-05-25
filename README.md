@@ -1,13 +1,26 @@
 # mcotear
 
-mcotear is an R package. The main feature of the package is the implementation of the functions that aid in the analysis of repairable systems, as I have not found another R package that incorporates these functions.
+An **R** package developed to document R functions I regularly use in my work, for easy access and documentation.
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+Installation
+------------
 
-### Jekyll Themes
+Install `mcotear` from Github with `devtools`:
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/jjw3952/mcotear/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+``` r
+library(devtools)
+devtools::install_github("jjw3952/mcotear")
+library(mcotear)
+```
 
-### Support or Contact
+Usage
+-----
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+Here are some things to try to get started.
+
+``` r
+library(mcotear)
+ls("package:mcotear")
+browseVignettes("mcotear")
+example(exp_oc)
+```

@@ -1,0 +1,90 @@
+#' The Mean Cumulative Function for a Power Law Process
+#'
+#' \code{power_law_mcf} implements the mean cumulative function
+#'   (expected number of failures at time t) for a Nonhomogeneous
+#'   Poisson Process (NHPP) with Power Law Intensity Function
+#'   (Crow-AMSAA model) given lambda (scale) and beta (shape)
+#'   parameters/parameter estimates.
+#'
+#' @param t A vector or list of failure times. As with \code{t} in
+#'   \code{\link{power_law_process}}, \code{t} could be a list of vectors
+#'   such that each vector indicates a different system, i.e. if you have
+#'   multiple systems each systems' failure times could be in it's own vector.
+#' @param lambda the scale parameter or parameter estimate for a 
+#'   Power Law NHPP. Can be calculated using \code{\link{power_law_process}}.
+#' @param beta the shape parameter or parameter estimate for a 
+#'   Power Law NHPP. Can be calculated using \code{\link{power_law_process}}.
+#'
+#' @return The output will be a \code{\link[base]{data.frame}} containing,
+#'   the ordered failure times ("t") and corresponding Power Law
+#'    mcf values ("power_mcf").
+#'
+#' @seealso \code{\link{power_law_process}}, \code{\link{mcf}}, \code{\link{rocof}},
+#'  \code{\link{power_law_intensity}}, \code{\link{trend_test}}, \code{\link{ttt}}, 
+#'  \code{\link{common_beta}}
+#'
+#' @examples
+#' data(amsaa)
+#' data(cbPalette)
+#'
+#' # Three systems all time truncated at 200 hours
+#'  # fit a NHPP Power Law (AMSAA-Crow) Model
+#' (m <- power_law_process(
+#'   t = split(amsaa$Time, amsaa$System),
+#'   T = list(200,200,200),
+#'   alpha = 0.05,
+#'   fail.trunc = FALSE,
+#'   iter = 10))
+#'
+#' # Get the nonparametric mcf estimates
+#'  # and change the name of "t" to "Time"
+#'  # so it matches with the name in the 
+#'  # amsaa data set
+#' df_mcf <- mcf(t = split(amsaa$Time, list(200,200,200), amsaa$System))
+#' names(df_mcf)[1] <- "Time"
+#'
+#' # Merge the nonparametric mcf estimates
+#' # with amsaa into a new data.frame amsaa1
+#' amsaa1 <- merge(amsaa, df_mcf, by = "Time")
+#' head(amsaa1)
+#'
+#' # Either one of the following works
+#' power_law_mcf(t = amsaa$Time, m$est[1], m$est[2])
+#' power_law_mcf(t = split(amsaa$Time, amsaa$System), m$est[1], m$est[2])
+#'
+#' # Mean Cumulative Function Plot
+#' theme_set(theme_bw())
+#' ggplot(amsaa1, aes(x = Time, y = mcf)) +
+#'   geom_point() +
+#'   labs(
+#'     x = "Operating Hours", y = "MCF",
+#'     title = "Mean Cumulative Function") +
+#'   stat_function(
+#'     fun = function(x){
+#'       power_law_mcf(t = x, lambda = m$e[[1]], beta = m$e[[2]])$power_mcf
+#'     },
+#'     mapping = aes(colour = "Power-Law NHPP")
+#'   ) +
+#'   scale_colour_manual("Functions:",
+#'     breaks = c("Power-Law NHPP"),
+#'     values = c("Power-Law NHPP" = cbPalette[2]),
+#'     guide = guide_legend(
+#'       override.aes = list(
+#'         linetype = c("solid")
+#'     ))
+#'   ) +
+#'   theme(legend.position = c(.175,.80),
+#'     legend.background = element_rect(fill="grey95"),
+#'     legend.key = element_rect(fill="grey95")
+#'   )
+#'
+#' @export
+power_law_mcf <- function(t, lambda, beta){
+  # Mean Cumulative Function
+  # Expected Number of Failures at Time t
+
+  t <- sort(unlist(t, use.names = FALSE))
+  mcf <- (t/lambda)^beta
+
+  return( data.frame(t = t, power_mcf = mcf) )
+}

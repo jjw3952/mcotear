@@ -21,5 +21,6 @@ LazyData: true
 Imports:
     ggplot2,
     gridExtra,
-    goftest
+    goftest,
+    ssanv
 RoxygenNote: 7.1.2
