@@ -15,9 +15,9 @@
 #'   the exponential mean with the given level of confidence. The units
 #'   will be the same as the units of the supplied \code{duration}. 
 #'
-#' @seealso \code{\link{mtbf_req}}, \code{\link{reliability_req}},
-#'   \code{\link{test_duration}}, \code{\link{test_demo}},
-#'   \code{\link{exp_equal_mtbf}}
+#' @seealso \code{\link{exp_mtbf_req}}, \code{\link{exp_reliability_req}},
+#'   \code{\link{exp_test_duration}}, \code{\link{exp_equal_mtbf}},
+#'   \code{\link{exp_fixed_duration_tests}}
 #'
 #' @examples
 #' # What is the 80% 2-sided CI for the MTBF (assuming the times between 

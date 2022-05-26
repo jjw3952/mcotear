@@ -1,6 +1,6 @@
 #' Power of a Reliability Test from Null and Alternative Hypotheses, alpha, and allowable failures
 #'
-#' \code{rel_power} calculates the power of a reliability test given null and alternative
+#' \code{exp_rel_power} calculates the power of a reliability test given null and alternative
 #'   hypotheses for MTTF/MTBF, the allowable numbers, the alpha error rate, and assuming
 #'   the times are exponentially distributed. Hypothesis should be of the form,
 #'   h0: MTBF <= X; h1: MTBF > X+Y, where X and Y are both positive values.
@@ -16,24 +16,25 @@
 #' @return The output is a numeric value representing the power of rejecting
 #'   the null hypothesis. 
 #'
-#' @seealso \code{\link{mtbf_req}}, \code{\link{reliability_req}},
-#'   \code{\link{test_duration}}, \code{\link{exp_mean_lcb}},
-#'   \code{\link{test_demo}}, \code{\link{exp_equal_mtbf}}, \code{\link{exp_oc}}
+#' @seealso \code{\link{exp_mtbf_req}}, \code{\link{exp_reliability_req}},
+#'   \code{\link{exp_test_duration}}, \code{\link{exp_mean_lcb}},
+#'   \code{\link{exp_equal_mtbf}}, \code{\link{exp_oc}}
+#'   \code{\link{exp_fixed_duration_tests}}
 #'
 #' @examples
 #' # Assuming the true MTBF is 300, what is the power of test  
 #'   # to demonstrate MTBF > 180, with 80% power and confidence, assuming 
 #'   # the true MTBF is 300 (and assuming the times between failure are
 #'   # exponentially distributed)
-#' rel_power(mtbf0 = 180, mtbf1 = 300, r = 1, alpha = 0.2)
+#' exp_rel_power(mtbf0 = 180, mtbf1 = 300, r = 1, alpha = 0.2)
 #'
 #' mtbf1 <- seq(100, 600, 1)
 #' df <- data.frame(
 #'   r = rep(c(1:5, 11), each = length(mtbf1)),
 #'   mtbf1 = mtbf1
 #' )
-#' df$power <- rel_power(mtbf0 = 180, mtbf1 = df$mtbf1, r = df$r, alpha = .2)
-#' df$T <- test_duration(r = df$r, mtbf = 180, conf = .8)$Duration
+#' df$power <- exp_rel_power(mtbf0 = 180, mtbf1 = df$mtbf1, r = df$r, alpha = .2)
+#' df$T <- exp_test_duration(r = df$r, mtbf = 180, conf = .8)$Duration
 #' df$label <- paste0("r = ", df$r, "; T = ", ceiling(df$T))
 #' 
 #' ggplot2::ggplot(df) + 
@@ -50,7 +51,7 @@
 #'   ggplot2::theme(plot.caption = element_text(hjust = 0))
 #'
 #' @export
-rel_power <- function(mtbf0, mtbf1, r = 1, alpha = 0.20){
+exp_rel_power <- function(mtbf0, mtbf1, r = 1, alpha = 0.20){
   pchisq(
     (mtbf0/mtbf1) * qchisq(alpha, 2*(r+1), lower.tail = FALSE),
     2*(r+1), lower.tail = FALSE

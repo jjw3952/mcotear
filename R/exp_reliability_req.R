@@ -1,6 +1,6 @@
 #' Calculates the Reliability Requirement
 #'
-#' \code{reliability_req} calculates the Reliability requirement based on a defined
+#' \code{exp_reliability_req} calculates the Reliability requirement based on a defined
 #'   Mean Time Between Failure (MTBF) (really we use Mean Time Between
 #'   Operational Mission Failure (MTBOMF)) requirement, and mission duration.
 #'   (Instead of Time, Miles, Rounds, etc. may be used.)
@@ -16,16 +16,16 @@
 #'   requirement, (the probability that no failure is observed during
 #'   the given mission duration).
 #'
-#' @seealso \code{\link{mtbf_req}}, \code{\link{test_duration}},
-#'   \code{\link{exp_mean_lcb}}, \code{\link{test_demo}},
-#'   \code{\link{exp_equal_mtbf}}
+#' @seealso \code{\link{exp_mtbf_req}}, \code{\link{exp_test_duration}},
+#'   \code{\link{exp_mean_lcb}}, \code{\link{exp_equal_mtbf}},
+#'   \code{\link{exp_fixed_duration_tests}}
 #'
 #' @examples
 #' # What is the required Reliability if the MTBF is 228 hours and
 #'   # a mission duration of 24 hours?
-#' reliability_req(mtbf = 228, md = 24)
+#' exp_reliability_req(mtbf = 228, md = 24)
 #'
 #' @export
-reliability_req <- function(mtbf, md){
+exp_reliability_req <- function(mtbf, md){
   exp(-md/mtbf)
 }

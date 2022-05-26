@@ -1,6 +1,6 @@
 #' Reliability Test Length from Null and Alternative Hypotheses, alpha, and beta
 #'
-#' \code{test_demo} calculates the required test length, and allowable number
+#' \code{exp_test_demo} calculates the required test length, and allowable number
 #'   of failures for a reliability demonstration test, given null and alternative
 #'   hypotheses for MTTF/MTBF, alpha and beta error rates, and assuming the
 #'   times are exponentially distributed. Hypothesis should be of the form,
@@ -22,9 +22,9 @@
 #'   and true type II error rate (Beta) (type II error rate = probability
 #'   the null hypothesis is not rejected when it is false).
 #'
-#' @seealso \code{\link{mtbf_req}}, \code{\link{reliability_req}},
-#'   \code{\link{test_duration}}, \code{\link{exp_mean_lcb}},
-#'   \code{\link{rel_power}}, \code{\link{exp_equal_mtbf}}, \code{\link{exp_oc}}
+#' @seealso \code{\link{exp_mtbf_req}}, \code{\link{exp_reliability_req}},
+#'   \code{\link{exp_test_duration}}, \code{\link{exp_mean_lcb}},
+#'   \code{\link{exp_rel_power}}, \code{\link{exp_equal_mtbf}}, \code{\link{exp_oc}}
 #'
 #' @references
 #' FIT COEF Reliability Test Planning for Mean Time Between Failures V2 \url{https://www.afit.edu/stat/}
@@ -34,10 +34,11 @@
 #'   # to demonstrate MTBF > 180 with confidence and ensuring there
 #'   # is 80% power we accept a system with MTBF > 300
 #'   # (assuming the times between failure are exponentially distributed)?
-#' test_demo(mtbf0 = 180, mtbf1 = 300, alpha = 0.2, beta = 0.2)
+#' exp_test_demo(mtbf0 = 180, mtbf1 = 300, alpha = 0.2, beta = 0.2)
 #'
+#' @keywords internal
 #' @export
-test_demo <- function(mtbf0, mtbf1, alpha = 0.2, beta = 0.2){
+exp_test_demo <- function(mtbf0, mtbf1, alpha = 0.2, beta = 0.2){
 
   if(alpha >= 1 | alpha <= 0 | beta >= 1 | beta <= 0){
     stop("alpha and beta must both be between 0 and 1")

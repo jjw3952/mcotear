@@ -8,9 +8,9 @@
 #'
 #' @return The output is a list with the p-value and interpretation help. 
 #'
-#' @seealso \code{\link{mtbf_req}}, \code{\link{reliability_req}},
-#'   \code{\link{test_duration}}, \code{\link{exp_mean_lcb}},
-#'   \code{\link{test_demo}}
+#' @seealso \code{\link{exp_mtbf_req}}, \code{\link{exp_reliability_req}},
+#'   \code{\link{exp_test_duration}}, \code{\link{exp_mean_lcb}},
+#'   \code{\link{exp_mean_ci}}, \code{\link{exp_fixed_duration_tests}}
 #'
 #' @examples
 #'   # from pg 189-192 of Statistical Methods for the Reliability of

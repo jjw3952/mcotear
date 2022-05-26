@@ -63,7 +63,7 @@ weibull_rel_demo(t = NULL, ss = 10, r = 1, alpha = .1,
 weibull_rel_demo(t = NULL, ss = 1, r = 0, alpha = .1,
   shape = 1, md = 2000, R_m = .8, lower=1, upper = 100000)
 mtbf_req(.8, 2000)
-test_duration(r = 0, mtbf = 8962.84, conf = .9)
+exp_test_duration(r = 0, mtbf = 8962.84, conf = .9)
 
 }
 \references{
