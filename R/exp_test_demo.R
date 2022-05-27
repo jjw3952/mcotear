@@ -37,7 +37,6 @@
 #' exp_test_demo(mtbf0 = 180, mtbf1 = 300, alpha = 0.2, beta = 0.2)
 #'
 #' @keywords internal
-#' @export
 exp_test_demo <- function(mtbf0, mtbf1, alpha = 0.2, beta = 0.2){
 
   if(alpha >= 1 | alpha <= 0 | beta >= 1 | beta <= 0){
