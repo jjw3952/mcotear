@@ -36,7 +36,7 @@ The output is a numeric value representing the power of rejecting
 exp_test_duration(r = 1, mtbf = 180, alpha = 0.2)
 exp_rel_power(mtbf0 = 180, mtbfa = 300, r = 1, alpha = 0.2)
 
-mtbfa <- seq(100, 600, 1)
+mtbfa <- seq(100, 800, 1)
 df <- data.frame(
   r = rep(c(1:5, 11), each = length(mtbfa)),
   mtbfa = mtbfa
@@ -44,6 +44,7 @@ df <- data.frame(
 df$power <- exp_rel_power(mtbf0 = 180, mtbfa = df$mtbfa, r = df$r, alpha = 0.2)
 df$T <- exp_test_duration(r = df$r, mtbf = 180, alpha = 0.2)$Duration
 df$label <- paste0("r = ", df$r, "; T = ", ceiling(df$T))
+df$label <- factor(df$label, levels = unique(df$label))
 
 ggplot(df) + 
   geom_path(
@@ -57,6 +58,15 @@ ggplot(df) +
    caption = "r = Allowable Failures\nT = Total Test Time Required (hours)\n\nConfidence set to 80\%\nMTBF0 = 180 hours"
   ) +
   theme(plot.caption = element_text(hjust = 0))
+
+power <- .8
+(sol <- uniroot(function(x) exp_rel_power(mtbf0=180,x,r=1,alpha=.2)-power, lower = 100, upper = 10000))
+sol$root
+sol$root/180
+
+(sol <- uniroot(function(x) exp_rel_power(mtbf0=180,x,r=11,alpha=.2)-power, lower = 100, upper = 10000))
+sol$root
+sol$root/180
 
 
 # At what value of MTBF would an "r" failure test have 80\% power
