@@ -1,7 +1,6 @@
 # mcotear
-![mcotear package for R](man/figures/logo.png)
-
-[<img src="man/figures/logo.png" width="250" alt = "mcotear package for r"/>](image.png)
+<!--- ![mcotear package for R](man/figures/logo.png) --->
+[<img src="man/figures/logo.png" width="250" alt = "mcotear package for r"/>](man/figures/logo.png)
 
 An **R** package developed to document R functions I regularly use in my work, for easy access and documentation.
 
