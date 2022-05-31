@@ -6,7 +6,7 @@
 #'   This assumes the times (miles, rounds, etc.) between failure
 #'   are exponentially distributed.
 #'
-#' @param r A numeric Reliability requirement (0.00:1.00).
+#' @param R_m A numeric mission Reliability requirement (0.00:1.00).
 #' @param md A numeric mission duration. This could be time, miles, rounds, etc. 
 #'
 #' @return The output will be a numeric vector with units the same
@@ -18,13 +18,13 @@
 #' @examples
 #' # What is the required MTBF to have a 90% prob of
 #'   # completing a 24 hour mission duration?
-#' mtbf_req(r = .9, md = 24)
+#' mtbf_req(R_m = .9, md = 24)
 #'
 #' @export
-mtbf_req <- function(rel, md){
-  if(rel >=1 | rel <= 0){
-    stop("rel must be a probability between 0 and 1")
+mtbf_req <- function(R_m, md){
+  if(R_m >=1 | R_m <= 0){
+    stop("R_m must be a probability between 0 and 1")
   }
 
-  -md/log(rel)
+  -md/log(R_m)
 }

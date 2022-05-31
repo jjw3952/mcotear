@@ -5,11 +5,11 @@
 #'   rounds, etc.), number of failures, confidence level, and assuming
 #'   the test is time terminated.
 #'
-#' @param n A numeric vector indicating the observed number of failures.
+#' @param r A numeric vector indicating the observed number of failures.
 #' @param duration A numeric vector indicating the tested duration
 #'   (hours, miles, rounds, etc.).
-#' @param conf The desired level of confidence (values within 0.0:1.00
-#'   default is set to 0.80).
+#' @param alpha The allowable type I error rate (1-confidence).
+#'   Values must be within 0.0:1.00 default is set to 0.20.
 #'
 #' @return The output will be a numeric vector, indicating the LCB of
 #'   the exponential mean with the given level of confidence. The units
@@ -23,15 +23,15 @@
 #' # What is the 80% LCB for the MTBF (assuming the times between 
 #'   # failure are exponentially distributed), given a test
 #'   # time of 367 hours, and 0 failures.
-#' exp_mean_lcb(n = 0, duration = 367, conf = 0.80)
+#' exp_mean_lcb(r = 0, duration = 367, alpha = 0.20)
 #'
 #' @export
-exp_mean_lcb <- function(n, duration, conf = 0.80){
+exp_mean_lcb <- function(r, duration, alpha = 0.20){
 
-  if(conf >= 1 | conf <= 0){
-    stop("conf must be between 0 and 1")
+  ifalpha >= 1 | alpha<= 0){
+    stop("alpha must be between 0 and 1")
   }
 
-  chisq <- qchisq(p = conf, df = 2*n+2, lower.tail = TRUE)
+  chisq <- qchisq(p = alpha, df = 2*(n+1), lower.tail = FALSE)
   2*duration/chisq
 }

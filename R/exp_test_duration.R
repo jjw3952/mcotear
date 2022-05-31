@@ -9,12 +9,13 @@
 #' @param r A numeric vector indicating the allowable number of failures.
 #' @param mtbf A numeric Mean Time Between Failure requirement.
 #'   This could be time, miles, rounds, etc.
-#' @param conf The desired level of confidence (values within 0.0:1.00
-#'   default is set to 0.80).
+#' @param alpha The allowable type I failure rate (1-confidence).
+#'   Values must be within 0.0:1.00 default is set to 0.20.
 #'
-#' @return The output will be a two column \code{data.frame}
-#'   with one column as the allowable number of failures, 
-#'   and the second column defining the required test
+#' @return The output will be a three column \code{data.frame}
+#'   with one column as the allowable number of failures,
+#'   the second column defining the number of failures at which you reject,
+#'   and the third column defining the required test
 #'   duration (in the same units as the \code{mtbf} parameter), needed
 #'   to satisfy the MTBF requirement with the given level of confidence,
 #'   and the allowable number of failures.
@@ -26,16 +27,16 @@
 #' @examples
 #' # What is the required test duration to demonstrate the MTBF is at least
 #'   # 228 hours, given 0:5 failures, and 80% confidence?
-#' exp_test_duration(r = 0:5, mtbf = 228, conf = 0.80)
+#' exp_test_duration(r = 0:5, mtbf = 228, alpha = 0.20)
 #'
 #' @export
-exp_test_duration <- function(r, mtbf, conf = 0.80){
+exp_test_duration <- function(r, mtbf, alpha = 0.20){
 
-  if(conf >= 1 | conf <= 0){
-    stop("conf must be between 0 and 1")
+  if(alpha >= 1 | alpha <= 0){
+    stop("alpha must be between 0 and 1")
   }
 
-  chisq <- qchisq(p = conf, df = 2*r+2, lower.tail = TRUE)
+  chisq <- qchisq(p = alpha, df = 2*(r+1), lower.tail = FALSE)
   duration <- mtbf*chisq/2
-  return( data.frame(Failures = r, Duration = duration) )
+  return( data.frame(Accept = r, Reject = r+1, Duration = duration) )
 }

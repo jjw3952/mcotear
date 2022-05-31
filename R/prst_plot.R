@@ -7,8 +7,8 @@
 #'   If specified it must be of equal length to t.
 #' @param t (Optional, default as NULL) The cumulative (operational) time.
 #'   If specified it must be of equal length to r.
-#' @param MTBF0 The minimum acceptable MTBF.
-#' @param MTBFA A value of MTBF greater than MTBF0 at which we want to
+#' @param mtbf0 The minimum acceptable MTBF.
+#' @param mtbfa A value of MTBF greater than MTBF0 at which we want to
 #'   ensure we don't reject the system.
 #' @param alpha The producer's risk of rejecting equipment with MTBF > MTBFA
 #'   (the probility of rejecting good equipment). Default = 0.10.
@@ -37,17 +37,17 @@
 #' Brazovsky, Igor. Reliability Theory and Practice. Prentice Hall, 1961.
 #'
 #' @examples
-#' prst_plot(r=NULL,t=NULL,MTBF0=100, MTBFA=200, alpha=.1, beta=.1)
+#' prst_plot(r=NULL, t=NULL, mtbf0=100, mtbfa=200, alpha=.1, beta=.1)
 #' prst_plot(
 #'   r = c(0,1,2,3,4,5,6,6,14),
 #'   t = c(0,100,150,200,250,275,300,1500,2060),
-#'   MTBF0=100, MTBFA=200, alpha=.1, beta=.1)
+#'   mtbf0=100, mtbfa=200, alpha=.1, beta=.1)
 #'
 #' @export
-prst_plot <- function(r=NULL,t=NULL,MTBF0=100, MTBFA=200, alpha=.1, beta=.1){
+prst_plot <- function(r=NULL, t=NULL, mtbf0=100, mtbfa=200, alpha=.1, beta=.1){
 
-  if(MTBF0 >= MTBFA){
-    stop("MTBFA must be > MTBF0")
+  if(mtbf0 >= mtbfa){
+    stop("mtbfa must be > mtbf0")
   }
   if(alpha >= 1 | alpha <= 0 | beta >= 1 | beta <= 0){
     stop("alpha and beta must both be between 0 and 1")
@@ -55,7 +55,7 @@ prst_plot <- function(r=NULL,t=NULL,MTBF0=100, MTBFA=200, alpha=.1, beta=.1){
 
   fail_dat <- data.frame(r, t)
 
-  prst_calcs <- prst(MTBF0, MTBFA, alpha, beta)
+  prst_calcs <- prst(mtbf0, mtbfa, alpha, beta)
   
   regions <- with(prst_calcs, data.frame(
     x = c(0, (r-c)/b, T, -a/b, T, T),

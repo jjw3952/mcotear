@@ -6,12 +6,12 @@
 #'   h0: MTBF <= X; h1: MTBF > X+Y, where X and Y are both positive values.
 #'
 #' @param mtbf0 A numeric value indicating the null hypothesis for MTBF/MTTR.
-#' @param mtbf1 A numeric value indicating the alternative hypothesis for MTBF/MTTR.
+#' @param mtbfa A numeric value indicating the alternative hypothesis for MTBF/MTTR.
 #'   (hours, miles, rounds, etc.).
 #' @param r The allowable number of failures.
-#' @param alpha The desired level of significance (type 1 error rate) (values
-#'   within 0.0:1.00, default is set to 0.20) (producer's risk - the probability we reject
-#'   a system with MTBF = mtbf1).
+#' @param alpha The allowable type I failure rate (1-confidence).
+#'   Values must be within 0.0:1.00 default is set to 0.20.
+#'   Producer's risk - the probability we reject a system with MTBF = mtbfa.
 #'
 #' @return The output is a numeric value representing the power of rejecting
 #'   the null hypothesis. 
@@ -26,15 +26,16 @@
 #'   # to demonstrate MTBF > 180, with 80% power and confidence, assuming 
 #'   # the true MTBF is 300 (and assuming the times between failure are
 #'   # exponentially distributed)
-#' exp_rel_power(mtbf0 = 180, mtbf1 = 300, r = 1, alpha = 0.2)
+#' exp_test_duration(r = 1, mtbf0 = 180, alpha = 0.2)
+#' exp_rel_power(mtbf0 = 180, mtbfa = 300, r = 1, alpha = 0.2)
 #'
-#' mtbf1 <- seq(100, 600, 1)
+#' mtbfa <- seq(100, 600, 1)
 #' df <- data.frame(
 #'   r = rep(c(1:5, 11), each = length(mtbf1)),
-#'   mtbf1 = mtbf1
+#'   mtbfa = mtbfa
 #' )
-#' df$power <- exp_rel_power(mtbf0 = 180, mtbf1 = df$mtbf1, r = df$r, alpha = .2)
-#' df$T <- exp_test_duration(r = df$r, mtbf = 180, conf = .8)$Duration
+#' df$power <- exp_rel_power(mtbf0 = 180, mtbfa = df$mtbfa, r = df$r, alpha = 0.2)
+#' df$T <- exp_test_duration(r = df$r, mtbf = 180, alpha = 0.2)$Duration
 #' df$label <- paste0("r = ", df$r, "; T = ", ceiling(df$T))
 #' 
 #' ggplot2::ggplot(df) + 
@@ -50,8 +51,29 @@
 #'   ) +
 #'   ggplot2::theme(plot.caption = element_text(hjust = 0))
 #'
+#'
+#' # At what value of MTBF would an "r" failure test have 80% power
+#' # if we want to demonstrate MTBF > 500 with 80% confidence
+#' r <- 0
+#' power <- .8
+#' mtbf0 <- 500
+#' alpha <- .2
+#' uniroot(function(x) exp_rel_power(mtbf0,x,r,alpha)-power, lower = 100, upper = 10000)
+#' exp_test_duration(r, mtbf0, alpha)
+#' 
+#' # At what value of MTBF would an "r" failure test have 80% power
+#' # if we want to demonstrate MTBF > 500 with 80% confidence
+#' r <- 0:6
+#' power <- .8
+#' mtbfa <- NULL
+#' for(i in seq_along(r)){
+#'   mtbfa[i] <- uniroot(function(x) exp_rel_power(mtbf0,x,r[i],alpha)-power, lower = 100, upper = 10000)$root
+#' }
+#' mtbfa
+#' exp_test_duration(r, mtbf0, alpha)
+#'
 #' @export
-exp_rel_power <- function(mtbf0, mtbf1, r = 1, alpha = 0.20){
+exp_rel_power <- function(mtbf0, mtbfa, r, alpha = 0.20){
   pchisq(
     (mtbf0/mtbf1) * qchisq(alpha, 2*(r+1), lower.tail = FALSE),
     2*(r+1), lower.tail = FALSE

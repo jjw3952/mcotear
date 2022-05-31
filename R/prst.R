@@ -2,8 +2,8 @@
 #'
 #' \code{prst} returns parameters defining a PRST as developed by Abraham Wald.
 #'
-#' @param MTBF0 The minimum acceptable MTBF.
-#' @param MTBFA A value of MTBF greater than MTBF0 at which we want to
+#' @param mtbf0 The minimum acceptable MTBF.
+#' @param mtbfA A value of MTBF greater than MTBF0 at which we want to
 #'   ensure we don't reject the system.
 #' @param alpha The producer's risk of rejecting equipment with MTBF > MTBFA
 #'   (the probility of rejecting good equipment). Default = 0.10.
@@ -30,25 +30,25 @@
 #' Brazovsky, Igor. Reliability Theory and Practice. Prentice Hall, 1961.
 #'
 #' @examples
-#' prst(MTBF0=100, MTBFA=200, alpha=.1, beta=.1)
-#' prst(MTBF0=100, MTBFA=200, alpha=.2, beta=.1)
+#' prst(mtbf0=100, mtbfa=200, alpha=.1, beta=.1)
+#' prst(mtbf0=100, mtbfa=200, alpha=.2, beta=.1)
 #'
 #' @export
-prst <- function(MTBF0, MTBFA, alpha=.1, beta=.1){
+prst <- function(mtbf0, mtbfa, alpha=.1, beta=.1){
 
-  if(MTBF0 >= MTBFA){
-    stop("MTBFA must be > MTBF0")
+  if(mtbf0 >= mtbfa){
+    stop("mtbfa must be > mtbf0")
   }
   if(alpha >= 1 | alpha <= 0 | beta >= 1 | beta <= 0){
     stop("alpha and beta must both be between 0 and 1")
   }
 
-  d <- MTBFA/MTBF0
+  d <- mtbfa/mtbf0
   (A <- ((d+1)*(1-beta))/(2*alpha*d))
   (B <- beta/(1-alpha))
 
   (a <- log(B)/log(d))
-  (b <- (1/MTBF0 - 1/MTBFA) / log(d))
+  (b <- (1/mtbf0 - 1/mtbfa) / log(d))
   (c <- log(A) / log(d))
 
   r <- 1
@@ -68,7 +68,7 @@ prst <- function(MTBF0, MTBFA, alpha=.1, beta=.1){
   accept_time[accept_time > T] <- NA
   df <- data.frame(r = r_seq, accept_le_r = accept_time, reject_ge_r = reject_time)
 
-  #test_duration(r_seq, MTBF0, 1-alpha)
+  #test_duration(r_seq, mtbf0, 1-alpha)
 
   return(
     list(

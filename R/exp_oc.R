@@ -16,20 +16,21 @@
 #'   \code{\link{exp_fixed_duration_tests}}
 #'
 #' @examples
-#'   # Theta is MTBF, 0 is the number at which you accept - system passes test
-#'   # 804.719 is the test duration
-#'   theta <- seq(250, 5000, 50)
-#'   prob_pass <- exp_oc(accept = 0, duration = 804.719, mtbf = theta)
-#'   prob_pass[1:5]
+#' theta <- seq(250, 5000, 50)
+#' prob_pass <- exp_oc(accept = 0, duration = 804.719, mtbf = theta)
+#' prob_pass[1:5]
 #'
-#'   ggplot2::ggplot(data.frame(prob_pass = prob_pass, theta = theta)) +
-#'     ggplot2::geom_line(ggplot2::aes(x = theta, y = prob_pass)) +
-#'     ggplot2::scale_y_continuous(limits = c(0,1), breaks = seq(0,1,.2))
+#' ggplot(data.frame(prob_pass = prob_pass, theta = theta)) +
+#'   geom_line(ggplot2::aes(x = theta, y = prob_pass)) +
+#'   scale_y_continuous(limits = c(0,1), breaks = seq(0,1,.2))
 #'
-#'   ggplot2::ggplot(data.frame(x=c(250,5000))) +
-#'     ggplot2::stat_function(aes(x=x), fun = exp_oc, args = list(accept = 0, duration = 804.719)) +
-#'     ggplot2::scale_y_continuous(limits = c(0,1), breaks = seq(0,1,.2)) +
-#'     ggplot2::labs(x = "MTBF", y = "Prob of Passing Demonstration")
+#' # Using stat_function()
+#' ggplot(data.frame(x=c(250,5000))) +
+#'   stat_function(aes(x=x), fun = exp_oc, args = list(accept = 0, duration = 804.719)) +
+#'   scale_y_continuous(limits = c(0,1), breaks = seq(0,1,.2)) +
+#'   labs(x = "MTBF", y = "Prob of Passing Demonstration")
+#'
+#' # See: example(exp_fixed_duration_tests)
 #'
 #' @references
 #' Mil-Hdbk-781A
