@@ -45,18 +45,18 @@ df$power <- exp_rel_power(mtbf0 = 180, mtbfa = df$mtbfa, r = df$r, alpha = 0.2)
 df$T <- exp_test_duration(r = df$r, mtbf = 180, alpha = 0.2)$Duration
 df$label <- paste0("r = ", df$r, "; T = ", ceiling(df$T))
 
-ggplot2::ggplot(df) + 
-  ggplot2::geom_path(
-    ggplot2::aes(x = mtbfa, y = power, colour = label)
+ggplot(df) + 
+  geom_path(
+    aes(x = mtbfa, y = power, colour = label)
   ) +
-  ggplot2::scale_colour_manual("", values = cbbPalette) +
-  ggplot2::scale_y_continuous(limits = c(0,1), breaks = seq(0,1,.2)) +
-  ggplot2::labs(
+  scale_colour_manual("", values = cbbPalette) +
+  scale_y_continuous(limits = c(0,1), breaks = seq(0,1,.2)) +
+  labs(
    y = "Probability of Passing Demonstration\n(Power)",
    x = "True MTBOMF",
    caption = "r = Allowable Failures\nT = Total Test Time Required (hours)\n\nConfidence set to 80\%\nMTBF0 = 180 hours"
   ) +
-  ggplot2::theme(plot.caption = element_text(hjust = 0))
+  theme(plot.caption = element_text(hjust = 0))
 
 
 # At what value of MTBF would an "r" failure test have 80\% power

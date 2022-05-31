@@ -168,7 +168,7 @@ exp_fixed_duration_tests <- function(mtbf0, mtbfa, alpha = .2, beta = .2){
 
     #fn1 <- function(x) {alpha -  ppois(a[i], lambda = x/mtbf0, lower.tail = TRUE)}
     #(T[i+1] <- uniroot(fn1, c(0,upr), tol = 1E-4)$root)
-    (T[i+1] <- exp_test_duration(a[i], mtbf0, alpha)[[2]])
+    (T[i+1] <- exp_test_duration(a[i], mtbf0, alpha)[[3]])
     #T[i+1]/MTBF0
 
     (act_beta[i+1] <- ppois(a[i], lambda = T[i+1]/mtbfa, lower.tail = FALSE))
