@@ -39,7 +39,7 @@ The output is a list supplying required test length (T),
   # to demonstrate MTBF > 180 with confidence and ensuring there
   # is 80\% power we accept a system with MTBF > 300
   # (assuming the times between failure are exponentially distributed)?
-exp_test_demo(mtbf0 = 180, mtbf1 = 300, alpha = 0.2, beta = 0.2)
+mcotear:::exp_test_demo(mtbf0 = 180, mtbf1 = 300, alpha = 0.2, beta = 0.2)
 
 }
 \references{

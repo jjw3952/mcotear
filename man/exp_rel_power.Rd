@@ -4,19 +4,19 @@
 \alias{exp_rel_power}
 \title{Power of a Reliability Test from Null and Alternative Hypotheses, alpha, and allowable failures}
 \usage{
-exp_rel_power(mtbf0, mtbf1, r = 1, alpha = 0.2)
+exp_rel_power(mtbf0, mtbfa, r, alpha = 0.2)
 }
 \arguments{
 \item{mtbf0}{A numeric value indicating the null hypothesis for MTBF/MTTR.}
 
-\item{mtbf1}{A numeric value indicating the alternative hypothesis for MTBF/MTTR.
+\item{mtbfa}{A numeric value indicating the alternative hypothesis for MTBF/MTTR.
 (hours, miles, rounds, etc.).}
 
 \item{r}{The allowable number of failures.}
 
-\item{alpha}{The desired level of significance (type 1 error rate) (values
-within 0.0:1.00, default is set to 0.20) (producer's risk - the probability we reject
-a system with MTBF = mtbf1).}
+\item{alpha}{The allowable type I failure rate (1-confidence).
+Values must be within 0.0:1.00 default is set to 0.20.
+Producer's risk - the probability we reject a system with MTBF = mtbfa.}
 }
 \value{
 The output is a numeric value representing the power of rejecting
@@ -33,20 +33,21 @@ The output is a numeric value representing the power of rejecting
   # to demonstrate MTBF > 180, with 80\% power and confidence, assuming 
   # the true MTBF is 300 (and assuming the times between failure are
   # exponentially distributed)
-exp_rel_power(mtbf0 = 180, mtbf1 = 300, r = 1, alpha = 0.2)
+exp_test_duration(r = 1, mtbf = 180, alpha = 0.2)
+exp_rel_power(mtbf0 = 180, mtbfa = 300, r = 1, alpha = 0.2)
 
-mtbf1 <- seq(100, 600, 1)
+mtbfa <- seq(100, 600, 1)
 df <- data.frame(
-  r = rep(c(1:5, 11), each = length(mtbf1)),
-  mtbf1 = mtbf1
+  r = rep(c(1:5, 11), each = length(mtbfa)),
+  mtbfa = mtbfa
 )
-df$power <- exp_rel_power(mtbf0 = 180, mtbf1 = df$mtbf1, r = df$r, alpha = .2)
-df$T <- exp_test_duration(r = df$r, mtbf = 180, conf = .8)$Duration
+df$power <- exp_rel_power(mtbf0 = 180, mtbfa = df$mtbfa, r = df$r, alpha = 0.2)
+df$T <- exp_test_duration(r = df$r, mtbf = 180, alpha = 0.2)$Duration
 df$label <- paste0("r = ", df$r, "; T = ", ceiling(df$T))
 
 ggplot2::ggplot(df) + 
   ggplot2::geom_path(
-    ggplot2::aes(x = mtbf1, y = power, colour = label)
+    ggplot2::aes(x = mtbfa, y = power, colour = label)
   ) +
   ggplot2::scale_colour_manual("", values = cbbPalette) +
   ggplot2::scale_y_continuous(limits = c(0,1), breaks = seq(0,1,.2)) +
@@ -56,6 +57,27 @@ ggplot2::ggplot(df) +
    caption = "r = Allowable Failures\nT = Total Test Time Required (hours)\n\nConfidence set to 80\%\nMTBF0 = 180 hours"
   ) +
   ggplot2::theme(plot.caption = element_text(hjust = 0))
+
+
+# At what value of MTBF would an "r" failure test have 80\% power
+# if we want to demonstrate MTBF > 500 with 80\% confidence
+r <- 0
+power <- .8
+mtbf0 <- 500
+alpha <- .2
+uniroot(function(x) exp_rel_power(mtbf0,x,r,alpha)-power, lower = 100, upper = 10000)
+exp_test_duration(r, mtbf0, alpha)
+
+# At what value of MTBF would an "r" failure test have 80\% power
+# if we want to demonstrate MTBF > 500 with 80\% confidence
+r <- 0:6
+power <- .8
+mtbfa <- NULL
+for(i in seq_along(r)){
+  mtbfa[i] <- uniroot(function(x) exp_rel_power(mtbf0,x,r[i],alpha)-power, lower = 100, upper = 10000)$root
+}
+mtbfa
+exp_test_duration(r, mtbf0, alpha)
 
 }
 \seealso{

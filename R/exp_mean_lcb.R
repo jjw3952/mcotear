@@ -28,10 +28,10 @@
 #' @export
 exp_mean_lcb <- function(r, duration, alpha = 0.20){
 
-  ifalpha >= 1 | alpha<= 0){
+  if(alpha >= 1 | alpha<= 0){
     stop("alpha must be between 0 and 1")
   }
 
-  chisq <- qchisq(p = alpha, df = 2*(n+1), lower.tail = FALSE)
+  chisq <- qchisq(p = alpha, df = 2*(r+1), lower.tail = FALSE)
   2*duration/chisq
 }

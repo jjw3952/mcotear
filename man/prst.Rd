@@ -4,19 +4,19 @@
 \alias{prst}
 \title{Probability Ratio Sequential Test (PRST)}
 \usage{
-prst(MTBF0, MTBFA, alpha = 0.1, beta = 0.1)
+prst(mtbf0, mtbfa, alpha = 0.1, beta = 0.1)
 }
 \arguments{
-\item{MTBF0}{The minimum acceptable MTBF.}
-
-\item{MTBFA}{A value of MTBF greater than MTBF0 at which we want to
-ensure we don't reject the system.}
+\item{mtbf0}{The minimum acceptable MTBF.}
 
 \item{alpha}{The producer's risk of rejecting equipment with MTBF > MTBFA
 (the probility of rejecting good equipment). Default = 0.10.}
 
 \item{beta}{The consumer's risk of accepting equipment with MTBF < MTBF0.
 (the probility of accepting bad equipment). Default = 0.10.}
+
+\item{mtbfA}{A value of MTBF greater than MTBF0 at which we want to
+ensure we don't reject the system.}
 }
 \value{
 The output will return \code{r} = the number of failures at which
@@ -32,8 +32,8 @@ The output will return \code{r} = the number of failures at which
 \code{prst} returns parameters defining a PRST as developed by Abraham Wald.
 }
 \examples{
-prst(MTBF0=100, MTBFA=200, alpha=.1, beta=.1)
-prst(MTBF0=100, MTBFA=200, alpha=.2, beta=.1)
+prst(mtbf0=100, mtbfa=200, alpha=.1, beta=.1)
+prst(mtbf0=100, mtbfa=200, alpha=.2, beta=.1)
 
 }
 \references{

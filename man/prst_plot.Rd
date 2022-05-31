@@ -7,8 +7,8 @@
 prst_plot(
   r = NULL,
   t = NULL,
-  MTBF0 = 100,
-  MTBFA = 200,
+  mtbf0 = 100,
+  mtbfa = 200,
   alpha = 0.1,
   beta = 0.1
 )
@@ -20,9 +20,9 @@ If specified it must be of equal length to t.}
 \item{t}{(Optional, default as NULL) The cumulative (operational) time.
 If specified it must be of equal length to r.}
 
-\item{MTBF0}{The minimum acceptable MTBF.}
+\item{mtbf0}{The minimum acceptable MTBF.}
 
-\item{MTBFA}{A value of MTBF greater than MTBF0 at which we want to
+\item{mtbfa}{A value of MTBF greater than MTBF0 at which we want to
 ensure we don't reject the system.}
 
 \item{alpha}{The producer's risk of rejecting equipment with MTBF > MTBFA
@@ -48,11 +48,11 @@ The output will return \code{r} = the number of failures at which
   and creates the plot of the results and defined parameters.
 }
 \examples{
-prst_plot(r=NULL,t=NULL,MTBF0=100, MTBFA=200, alpha=.1, beta=.1)
+prst_plot(r=NULL, t=NULL, mtbf0=100, mtbfa=200, alpha=.1, beta=.1)
 prst_plot(
   r = c(0,1,2,3,4,5,6,6,14),
   t = c(0,100,150,200,250,275,300,1500,2060),
-  MTBF0=100, MTBFA=200, alpha=.1, beta=.1)
+  mtbf0=100, mtbfa=200, alpha=.1, beta=.1)
 
 }
 \references{

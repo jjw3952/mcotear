@@ -4,16 +4,16 @@
 \alias{exp_mean_lcb}
 \title{Calculates the lower confidence bound for an exponential mean}
 \usage{
-exp_mean_lcb(n, duration, conf = 0.8)
+exp_mean_lcb(r, duration, alpha = 0.2)
 }
 \arguments{
-\item{n}{A numeric vector indicating the observed number of failures.}
+\item{r}{A numeric vector indicating the observed number of failures.}
 
 \item{duration}{A numeric vector indicating the tested duration
 (hours, miles, rounds, etc.).}
 
-\item{conf}{The desired level of confidence (values within 0.0:1.00
-default is set to 0.80).}
+\item{alpha}{The allowable type I error rate (1-confidence).
+Values must be within 0.0:1.00 default is set to 0.20.}
 }
 \value{
 The output will be a numeric vector, indicating the LCB of
@@ -30,7 +30,7 @@ The output will be a numeric vector, indicating the LCB of
 # What is the 80\% LCB for the MTBF (assuming the times between 
   # failure are exponentially distributed), given a test
   # time of 367 hours, and 0 failures.
-exp_mean_lcb(n = 0, duration = 367, conf = 0.80)
+exp_mean_lcb(r = 0, duration = 367, alpha = 0.20)
 
 }
 \seealso{

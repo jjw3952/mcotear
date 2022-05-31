@@ -4,18 +4,18 @@
 \alias{exp_fixed_duration_tests}
 \title{Exponential Fixed Duration Test Plans}
 \usage{
-exp_fixed_duration_tests(MTBF0 = 500, MTBFA = 1000, alpha = 0.2, beta = 0.2)
+exp_fixed_duration_tests(mtbf0, mtbfa, alpha = 0.2, beta = 0.2)
 }
 \arguments{
-\item{MTBF0}{The MTBF below which to reject the system with probability alpha.}
-
-\item{MTBFA}{The MTBF above which to accept the system with probability 1-beta.}
+\item{mtbf0}{The MTBF below which to reject the system with probability alpha.}
 
 \item{alpha}{The type I error rate, producer's risk - the probability we reject
 a system with MTBF > MTBFA.}
 
 \item{beta}{The type II error rate, consumer's risk - the probability we accept
 a system with MTBF < MTBF0.}
+
+\item{mtbfA}{The MTBF above which to accept the system with probability 1-beta.}
 }
 \value{
 The output is a data.frame containing the allowable number of failures
@@ -29,23 +29,130 @@ The output is a data.frame containing the allowable number of failures
   tests for exponentially distributed MTBF with desired alpha and beta.
 }
 \examples{
-  (fd <- exp_fixed_duration_tests(MTBF0 = 500, MTBFA = 1000, alpha = .2, beta = .2))
-  theta <- seq(250, 2000, 50)
-  prob_pass <- exp_oc(accept = fd$Accept[6], duration = fd$Duration[6], mtbf = theta)
+(fd <- exp_fixed_duration_tests(mtbf0 = 500, mtbfa = 1000, alpha = .2, beta = .2))
+theta <- seq(250, 2000, 50)
+prob_pass <- exp_oc(accept = fd$Accept[6], duration = fd$Duration[6], mtbf = theta)
 
-  df <- data.frame(x = c(500,1000), y = c(0.20, 1-fd$beta[6]), label = c("alpha", "1-beta"))
+df <- data.frame(x = c(500,1000), y = c(0.20, 1-fd$beta[6]), label = c("alpha", "1-beta"))
 
-  ggplot2::ggplot(data.frame(prob_pass = prob_pass, theta = theta)) +
-    ggplot2::geom_point(ggplot2::aes(x = theta, y = prob_pass)) +
-    ggplot2::scale_y_continuous(limits = c(0,1), breaks = seq(0,1,.2)) +
-    ggplot2::geom_point(
-      data = df,
-      mapping = ggplot2::aes(x, y), colour = "red"
-    ) +
-    ggplot2::geom_text(
-      data = df,
-      mapping = ggplot2::aes(x, y, label = label), parse = TRUE, colour = "red", hjust = c(-1,1.2)
+ggplot(data.frame(prob_pass = prob_pass, theta = theta)) +
+  geom_point(ggplot2::aes(x = theta, y = prob_pass)) +
+  scale_y_continuous(limits = c(0,1), breaks = seq(0,1,.2)) +
+  geom_point(
+    data = df,
+    mapping = aes(x, y), colour = "red"
+  ) +
+  geom_text(
+    data = df,
+    mapping = aes(x, y, label = label), parse = TRUE, colour = "red", hjust = c(-1,1.2)
+  )
+
+# Recipe for plotting a single OC Curve
+alpha <- .2
+beta <- .2
+mtbf0 <- 500
+mtbfa <- 1000
+(fd <- exp_fixed_duration_tests(mtbf0 = mtbf0, mtbfa = mtbfa, alpha = alpha, beta = beta))
+test <- 6 # select row of test from fd
+theta <- seq(250, 2000, 50)
+prob_pass <- exp_oc(accept = fd$Accept[test], duration = fd$Duration[test], mtbf = theta)
+
+df <- data.frame(x = c(mtbf0, mtbfa), y = c(alpha, 1-fd$beta[test]), label = c("alpha", "1-beta"))
+
+ggplot(data.frame(prob_pass = prob_pass, theta = theta)) +
+  geom_point(aes(x = theta, y = prob_pass)) +
+  geom_path(aes(x = theta, y = prob_pass)) +
+  scale_y_continuous(limits = c(0,1), breaks = seq(0,1,.2)) +
+  geom_point(
+    data = df,
+    mapping = aes(x, y), colour = "red"
+  ) +
+  geom_text(
+    data = df,
+    mapping = aes(x, y, label = label), parse = TRUE, colour = "red", hjust = c(-1,1.2)
+  ) +
+  labs(
+    x = "MTBF", y = "Prob of Acceptance",
+    title = "Exponential OC Curve",
+    subtitle = paste0("Test Duration = ", ceiling(fd$Duration[test]), ". Allowable Failures = ", fd$Accept[test])
+  )
+
+# Recipe for plotting multiple OC curves
+alpha <- .2
+beta <- .2
+mtbf0 <- 500
+mtbfa <- 1000
+(fd <- exp_fixed_duration_tests(mtbf0 = mtbf0, mtbfa = mtbfa, alpha = alpha, beta = beta))
+test <- 1:7 # select row(s) of test from fd
+theta <- seq(mtbf0/2, mtbf0*8.8, 50)
+#library(purrr)
+#library(reshape2)
+prob_pass <- purrr::map2(
+  .x = fd$Accept[test],
+  .y = fd$Duration[test],
+  .f = ~exp_oc(accept = .x, duration = .y, mtbf = theta))
+names(prob_pass) <- paste0("OC", 1:length(prob_pass))
+prob_pass <- as.data.frame(prob_pass)
+prob_pass <- reshape2::melt(prob_pass, id.vars = NULL, value.name = "prob_pass", variable.name = "OC")
+prob_pass$Accept <- rep(ceiling(fd$Accept[test]), each = length(theta))
+prob_pass$Duration <- rep(ceiling(fd$Duration[test]), each = length(theta))
+prob_pass$MTBF <- theta
+head(prob_pass)
+
+
+df <- unique(data.frame(
+  x = rep(c(mtbf0, mtbfa), each = length(test)),
+  y = c(rep(alpha, length(test)), 1-fd$beta[test]),
+  label = rep(c("alpha", "1-beta"), each = length(test))
+  ))
+
+exp_test_duration(0, 500)
+
+ggplot(
+  prob_pass,
+  aes(
+    x = MTBF,
+    y = prob_pass,
+    colour = interaction(Accept, Duration, sep = ", ")
     )
+  ) +
+  geom_hline(yintercept = 1-beta, colour = "red", linetype = "longdash") +
+  geom_point(size = .75) +
+  geom_path() +
+  scale_y_continuous(limits = c(0,1), breaks = seq(0,1,.2)) +
+  geom_point(
+    inherit.aes = FALSE,
+    data = df,
+    mapping = aes(x, y, fill = label), shape = 21, colour = "transparent"
+  ) +
+  scale_fill_manual(
+    "Measure of Merit",
+    values = c("alpha" = "blue", "1-beta" = "red"),
+    labels = scales::parse_format()
+  ) +
+  labs(
+    colour = "Allowable Failures,\nTest Duration",
+    x = "MTBF", y = "Prob of Acceptance",
+    title = "Exponential OC Curve",
+    subtitle = bquote(atop(H[0]*": MTBF"<=.(mtbf0)*phantom(0),H[a]*": MTBF">.(mtbfa)))
+  ) +
+  guides(
+    fill = guide_legend(
+      override.aes = list(
+        colour = "transparent" #c("blue", "red")
+        )
+      )
+  ) +
+  theme(
+    # plot.title = element_text(vjust = 1, lineheight = 1, margin = margin(0,0,-35.5,0)),
+    # plot.subtitle = element_text(hjust = 1, vjust = 0, lineheight = 1, margin = margin(0,0,5.5,0) ),
+    # plot.margin = margin(30,0,0,0)
+  )
+# getwd()
+# ggsave("Exp OC.png", height = 5, width = 6.5)
+# grid::grid.ls(grid::grid.force())
+# grid::grid.gedit("key-3-1-1.4-2-4-2", size = grid::unit(7, "points"))
+# grid::grid.gedit("key-4-1-1.5-2-5-2", size = grid::unit(7, "points"))
 
 }
 \references{

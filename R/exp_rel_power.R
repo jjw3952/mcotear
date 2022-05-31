@@ -26,12 +26,12 @@
 #'   # to demonstrate MTBF > 180, with 80% power and confidence, assuming 
 #'   # the true MTBF is 300 (and assuming the times between failure are
 #'   # exponentially distributed)
-#' exp_test_duration(r = 1, mtbf0 = 180, alpha = 0.2)
+#' exp_test_duration(r = 1, mtbf = 180, alpha = 0.2)
 #' exp_rel_power(mtbf0 = 180, mtbfa = 300, r = 1, alpha = 0.2)
 #'
 #' mtbfa <- seq(100, 600, 1)
 #' df <- data.frame(
-#'   r = rep(c(1:5, 11), each = length(mtbf1)),
+#'   r = rep(c(1:5, 11), each = length(mtbfa)),
 #'   mtbfa = mtbfa
 #' )
 #' df$power <- exp_rel_power(mtbf0 = 180, mtbfa = df$mtbfa, r = df$r, alpha = 0.2)
@@ -40,7 +40,7 @@
 #' 
 #' ggplot2::ggplot(df) + 
 #'   ggplot2::geom_path(
-#'     ggplot2::aes(x = mtbf1, y = power, colour = label)
+#'     ggplot2::aes(x = mtbfa, y = power, colour = label)
 #'   ) +
 #'   ggplot2::scale_colour_manual("", values = cbbPalette) +
 #'   ggplot2::scale_y_continuous(limits = c(0,1), breaks = seq(0,1,.2)) +
@@ -75,7 +75,7 @@
 #' @export
 exp_rel_power <- function(mtbf0, mtbfa, r, alpha = 0.20){
   pchisq(
-    (mtbf0/mtbf1) * qchisq(alpha, 2*(r+1), lower.tail = FALSE),
+    (mtbf0/mtbfa) * qchisq(alpha, 2*(r+1), lower.tail = FALSE),
     2*(r+1), lower.tail = FALSE
   )
 }

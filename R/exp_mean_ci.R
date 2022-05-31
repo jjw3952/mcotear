@@ -38,8 +38,8 @@ exp_mean_ci <- function(r, duration, alpha = 0.20){
   }
 
   lwr_p <- alpha/2
-  chisq_lwr <- qchisq(p = lwr_p, df = 2 * (n + 1), lower.tail = FALSE)
-  chisq_upr <- qchisq(p = lwr_p, df = 2 * n, lower.tail = TRUE)
+  chisq_lwr <- qchisq(p = lwr_p, df = 2 * (r + 1), lower.tail = FALSE)
+  chisq_upr <- qchisq(p = lwr_p, df = 2 * r, lower.tail = TRUE)
   lwr <- 2 * duration/chisq_lwr
   upr <- 2 * duration/chisq_upr
   ci <- c(lwr, upr)

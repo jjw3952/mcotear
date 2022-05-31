@@ -98,7 +98,7 @@
 #' 
 #' 
 #' df <- unique(data.frame(
-#'   x = rep(c(MTBF0,MTBFA), each = length(test)),
+#'   x = rep(c(mtbf0, mtbfa), each = length(test)),
 #'   y = c(rep(alpha, length(test)), 1-fd$beta[test]),
 #'   label = rep(c("alpha", "1-beta"), each = length(test))
 #'   ))
@@ -131,7 +131,7 @@
 #'     colour = "Allowable Failures,\nTest Duration",
 #'     x = "MTBF", y = "Prob of Acceptance",
 #'     title = "Exponential OC Curve",
-#'     subtitle = bquote(atop(H[0]*": MTBF"<=.(MTBF0)*phantom(0),H[a]*": MTBF">.(MTBFA)))
+#'     subtitle = bquote(atop(H[0]*": MTBF"<=.(mtbf0)*phantom(0),H[a]*": MTBF">.(mtbfa)))
 #'   ) +
 #'   guides(
 #'     fill = guide_legend(
@@ -168,7 +168,7 @@ exp_fixed_duration_tests <- function(mtbf0, mtbfa, alpha = .2, beta = .2){
 
     #fn1 <- function(x) {alpha -  ppois(a[i], lambda = x/mtbf0, lower.tail = TRUE)}
     #(T[i+1] <- uniroot(fn1, c(0,upr), tol = 1E-4)$root)
-    (T[i+1] <- exp_test_duration(a[i], mtbf0, conf = 1-alpha)[[2]])
+    (T[i+1] <- exp_test_duration(a[i], mtbf0, alpha)[[2]])
     #T[i+1]/MTBF0
 
     (act_beta[i+1] <- ppois(a[i], lambda = T[i+1]/mtbfa, lower.tail = FALSE))

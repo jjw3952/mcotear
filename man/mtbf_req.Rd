@@ -4,12 +4,12 @@
 \alias{mtbf_req}
 \title{Calculates the Mean Time Between Failure (MTBF) Requirement}
 \usage{
-mtbf_req(rel, md)
+mtbf_req(R_m, md)
 }
 \arguments{
-\item{md}{A numeric mission duration. This could be time, miles, rounds, etc.}
+\item{R_m}{A numeric mission Reliability requirement (0.00:1.00).}
 
-\item{r}{A numeric Reliability requirement (0.00:1.00).}
+\item{md}{A numeric mission duration. This could be time, miles, rounds, etc.}
 }
 \value{
 The output will be a numeric vector with units the same
@@ -25,7 +25,7 @@ The output will be a numeric vector with units the same
 \examples{
 # What is the required MTBF to have a 90\% prob of
   # completing a 24 hour mission duration?
-mtbf_req(r = .9, md = 24)
+mtbf_req(R_m = .9, md = 24)
 
 }
 \seealso{

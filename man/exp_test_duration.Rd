@@ -4,7 +4,7 @@
 \alias{exp_test_duration}
 \title{Calculates the required test length to meet a MTBF (Reliability) requirement}
 \usage{
-exp_test_duration(r, mtbf, conf = 0.8)
+exp_test_duration(r, mtbf, alpha = 0.2)
 }
 \arguments{
 \item{r}{A numeric vector indicating the allowable number of failures.}
@@ -12,13 +12,14 @@ exp_test_duration(r, mtbf, conf = 0.8)
 \item{mtbf}{A numeric Mean Time Between Failure requirement.
 This could be time, miles, rounds, etc.}
 
-\item{conf}{The desired level of confidence (values within 0.0:1.00
-default is set to 0.80).}
+\item{alpha}{The allowable type I failure rate (1-confidence).
+Values must be within 0.0:1.00 default is set to 0.20.}
 }
 \value{
-The output will be a two column \code{data.frame}
-  with one column as the allowable number of failures, 
-  and the second column defining the required test
+The output will be a three column \code{data.frame}
+  with one column as the allowable number of failures,
+  the second column defining the number of failures at which you reject,
+  and the third column defining the required test
   duration (in the same units as the \code{mtbf} parameter), needed
   to satisfy the MTBF requirement with the given level of confidence,
   and the allowable number of failures.
@@ -33,7 +34,7 @@ The output will be a two column \code{data.frame}
 \examples{
 # What is the required test duration to demonstrate the MTBF is at least
   # 228 hours, given 0:5 failures, and 80\% confidence?
-exp_test_duration(r = 0:5, mtbf = 228, conf = 0.80)
+exp_test_duration(r = 0:5, mtbf = 228, alpha = 0.20)
 
 }
 \seealso{

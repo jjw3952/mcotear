@@ -58,7 +58,7 @@ prst <- function(mtbf0, mtbfa, alpha=.1, beta=.1){
   # r = Truncation Failures
 
   # Truncation Time
-  (T <- ceiling(MTBFA * qchisq(alpha, 2*r, lower.tail = TRUE) / 2))
+  (T <- ceiling(mtbfa * qchisq(alpha, 2*r, lower.tail = TRUE) / 2))
   
   # The accept and reject times for r failures
   r_seq <- 0:r
