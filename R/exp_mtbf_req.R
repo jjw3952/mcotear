@@ -18,10 +18,10 @@
 #' @examples
 #' # What is the required MTBF to have a 90% prob of
 #'   # completing a 24 hour mission duration?
-#' mtbf_req(R_m = .9, md = 24)
+#' exp_mtbf_req(R_m = .9, md = 24)
 #'
 #' @export
-mtbf_req <- function(R_m, md){
+exp_mtbf_req <- function(R_m, md){
   if(R_m >=1 | R_m <= 0){
     stop("R_m must be a probability between 0 and 1")
   }
