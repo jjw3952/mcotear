@@ -50,4 +50,6 @@ p1$p +
   scale_y_continuous(limits = c(0,1), breaks = seq(0,1,.2)) +
   scale_x_continuous(limits = c(mtbf,10000), breaks = seq(3000,10000,1000))
 
+ rm(list = c("shape", "scale_vec", "mtbf_vec", "scale", "mtbf", "p1"))
+
 }

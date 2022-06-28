@@ -46,6 +46,8 @@
 #'     x = "Total Time on Test",
 #'     y = "Scaled Total Time on Test")
 #'
+#'  rm(list = c("amsaa", "ttt_df"))
+#'
 #' @export
 ttt <- function(t, T, fail.trunc = FALSE){
 

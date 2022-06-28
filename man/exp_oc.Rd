@@ -45,6 +45,8 @@ ggplot(data.frame(x=c(250,5000))) +
 
 # See: example(exp_fixed_duration_tests)
 
+rm(list = c("theta", "prob_pass"))
+
 }
 \references{
 Mil-Hdbk-781A

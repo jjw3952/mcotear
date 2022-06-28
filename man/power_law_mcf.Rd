@@ -87,6 +87,8 @@ ggplot(amsaa1, aes(x = Time, y = mcf)) +
     legend.key = element_rect(fill="grey95")
   )
 
+rm(list = c("amsaa", "cbPalette", "m", "df_mcf", "amsaa1"))
+
 }
 \seealso{
 \code{\link{power_law_process}}, \code{\link{mcf}}, \code{\link{rocof}},

@@ -53,6 +53,8 @@
 #' # Either one of the following works
 #' power_law_intensity(t = amsaa$Time, m$est[1], m$est[2])
 #' power_law_intensity(t = split(amsaa$Time, amsaa$System), m$est[1], m$est[2])
+#' 
+#' rm(list = c("amsaa", "cbPalette", "df_mcf", "amsaa1"))
 #'
 #' @export
 power_law_intensity <- function(t, lambda, beta){

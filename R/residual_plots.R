@@ -28,6 +28,8 @@
 #'
 #' npk.table <- df_from_model(npk.aov1, type = "rstandard")
 #' residual_plots(npk.table)
+#' 
+#' rm(list = c("npk", "npk.aov", "npk.aov1", "npk.table"))
 #'
 #' @export
 residual_plots <- function(x, ...){

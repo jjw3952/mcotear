@@ -52,6 +52,8 @@
 #'   fail.trunc = FALSE,
 #'   iter = 10
 #' )
+#' 
+#' rm(list = c("amsaa"))
 #'
 #' @export
 power_law_process <- function(t, T, alpha = 0.05, fail.trunc = FALSE, iter = 10){

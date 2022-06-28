@@ -53,6 +53,8 @@
 #'   T = list(197.2),
 #'   fail.trunc = TRUE)
 #'
+#'  rm(list = c("amsaa"))
+#'
 #' @export
 trend_test <- function(t, T, fail.trunc = TRUE){
   # t = Time of Failure (not time between)

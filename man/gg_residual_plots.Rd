@@ -35,6 +35,8 @@ plot(npk.aov1)
 npk.table <- df_from_model(npk.aov1, type = "rstandard")
 gg_residual_plots(npk.table)
 
+rm(list = c("npk", "npk.aov", "npk.aov1", "npk.table"))
+
 }
 \seealso{
 \link[stats]{plot.lm}, \link{residual_plots}, \link{df_from_model}

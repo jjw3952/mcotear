@@ -79,6 +79,8 @@
 #'     legend.background = element_rect(fill="grey95"),
 #'     legend.key = element_rect(fill="grey95")
 #'   )
+#' 
+#' rm(list = c("amsaa", "cbPalette", "m", "df_mcf", "amsaa1"))
 #'
 #' @export
 power_law_mcf <- function(t, lambda, beta){

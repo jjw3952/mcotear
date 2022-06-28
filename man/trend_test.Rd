@@ -61,6 +61,8 @@ trend_test(
   T = list(197.2),
   fail.trunc = TRUE)
 
+ rm(list = c("amsaa"))
+
 }
 \seealso{
 \code{\link{power_law_process}}, \code{\link{power_law_mcf}},

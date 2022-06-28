@@ -37,6 +37,8 @@
 #'   labs(x = "MTBF", y = "Prob of Passing Demonstration")
 #'
 #' # See: example(exp_fixed_duration_tests)
+#' 
+#' rm(list = c("theta", "prob_pass"))
 #'
 #' @references
 #' Mil-Hdbk-781A

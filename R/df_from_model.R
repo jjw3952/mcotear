@@ -40,6 +40,8 @@
 #' df_from_model(npk.aov1, type = "residuals")
 #' df_from_model(npk.aov1, type = "resid")
 #' 
+#' rm(list = c("npk", "npk.aov", "npk.aov1", "npk.table"))
+#'
 #' \dontrun{
 #' df_from_model(npk.aov1, resid)
 #' }

@@ -59,6 +59,8 @@ ggplot(df,
   scale_colour_manual(values = cbPalette) +
   ggtitle("Duane Plot")
 
+ rm(list = c("amsaa", "df"))
+
 }
 \seealso{
 \code{\link{power_law_process}}, \code{\link{power_law_intensity}},

@@ -89,6 +89,8 @@ for(i in seq_along(r)){
 mtbfa
 exp_test_duration(r, mtbf0, alpha)
 
+rm(list = c("r", "power", "mtbfa", "i", "mtbf0", "alpha", "sol", "df"))
+
 }
 \seealso{
 \code{\link{exp_mtbf_req}}, \code{\link{exp_reliability_req}},

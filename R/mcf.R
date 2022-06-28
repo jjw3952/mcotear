@@ -44,6 +44,8 @@
 #'   T = list(197.2,190.8,195.8),
 #'   by = NULL)
 #' 
+#' rm(list = c("amsaa"))
+#'
 #' @export
 mcf <- function(t, T, by = NULL){
 

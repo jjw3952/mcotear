@@ -52,6 +52,8 @@ mcf(
   T = list(197.2,190.8,195.8),
   by = NULL)
 
+rm(list = c("amsaa"))
+
 }
 \seealso{
 \code{\link{power_law_process}}, \code{\link{power_law_mcf}},

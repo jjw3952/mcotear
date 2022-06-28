@@ -63,6 +63,8 @@ power_law_process(
   iter = 10
 )
 
+rm(list = c("amsaa"))
+
 }
 \seealso{
 \code{\link{power_law_mcf}}, \code{\link{mcf}},

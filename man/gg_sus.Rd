@@ -35,6 +35,9 @@ p +
   scale_colour_manual(breaks = "End of Record Test", values = "#E69F00") +
   scale_linetype_manual(breaks = "End of Record Test", values = 2) +
   labs(y = "Percentile Rank", x = "SUS Score")
+
+rm(list = c("p", "df"))
+
 }
 \seealso{
 \code{\link{sus_to_percentile}}, \code{\link{sus_suaro}}

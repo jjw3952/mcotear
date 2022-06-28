@@ -53,6 +53,8 @@
 #'   scale_colour_manual(values = cbPalette) +
 #'   ggtitle("Duane Plot")
 #'
+#'  rm(list = c("amsaa", "df"))
+#'
 #' @export
 rocof <- function(t, by = NULL){
 

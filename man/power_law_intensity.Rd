@@ -61,6 +61,8 @@ head(amsaa1)
 power_law_intensity(t = amsaa$Time, m$est[1], m$est[2])
 power_law_intensity(t = split(amsaa$Time, amsaa$System), m$est[1], m$est[2])
 
+rm(list = c("amsaa", "cbPalette", "df_mcf", "amsaa1"))
+
 }
 \seealso{
 \code{\link{power_law_process}}, \code{\link{mcf}}, \code{\link{rocof}},

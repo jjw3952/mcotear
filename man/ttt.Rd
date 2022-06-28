@@ -54,6 +54,8 @@ ggplot(ttt_df, aes(x = ttt, y = scaled_ttt)) +
     x = "Total Time on Test",
     y = "Scaled Total Time on Test")
 
+ rm(list = c("amsaa", "ttt_df"))
+
 }
 \seealso{
 \code{\link{power_law_process}}, \code{\link{power_law_mcf}},
