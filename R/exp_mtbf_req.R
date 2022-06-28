@@ -12,8 +12,8 @@
 #' @return The output will be a numeric vector with units the same
 #'   as the mission duration.
 #'
-#' @seealso \code{\link{reliability_req}}, \code{\link{test_duration}},
-#'   \code{\link{exp_mean_lcb}}, \code{\link{test_demo}}
+#' @seealso \code{\link{exp_reliability_req}}, \code{\link{exp_test_duration}},
+#'   \code{\link{exp_mean_lcb}}, \code{\link{exp_test_demo}}
 #'
 #' @examples
 #' # What is the required MTBF to have a 90% prob of
