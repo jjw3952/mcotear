@@ -19,8 +19,8 @@
 #'   as well as some text which outputs the form of the accept/reject lines, and
 #'   the accept/reject times.
 #'
-#' @seealso \code{\link{reliability_req}}, \code{\link{test_duration}},
-#'   \code{\link{test_demo}}, \code{\link{prst_plot}}
+#' @seealso \code{\link{exp_reliability_req}}, \code{\link{exp_test_duration}},
+#'   \code{\link{exp_test_demo}}, \code{\link{prst_plot}}
 #'
 #' @references
 #' Mil-Hdbk-781A

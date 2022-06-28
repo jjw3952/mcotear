@@ -44,6 +44,6 @@ Wald, Abraham. Sequential Analysis. John Wiley & Sons, 1947.
 Brazovsky, Igor. Reliability Theory and Practice. Prentice Hall, 1961.
 }
 \seealso{
-\code{\link{reliability_req}}, \code{\link{test_duration}},
-  \code{\link{test_demo}}, \code{\link{prst_plot}}
+\code{\link{exp_reliability_req}}, \code{\link{exp_test_duration}},
+  \code{\link{exp_test_demo}}, \code{\link{prst_plot}}
 }
