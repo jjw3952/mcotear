@@ -154,6 +154,11 @@ ggplot(
 # grid::grid.gedit("key-3-1-1.4-2-4-2", size = grid::unit(7, "points"))
 # grid::grid.gedit("key-4-1-1.5-2-5-2", size = grid::unit(7, "points"))
 
+# Clean up workspace
+rm(list =
+  c("alpha", "beta", "df", "fd", "mtbf0",
+    "mtbfa", "prob_pass","test", "theta")
+)
 }
 \references{
 Mil-Hdbk-781A
