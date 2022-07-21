@@ -45,7 +45,7 @@ exp_equal_mtbf <- function(T, r){
   return(
     list(
      "pvalue" = pvalue,
-     "interpretation" = "large p-values reject null hypothesis of equal MTBFs"
+     "interpretation" = "small p-values reject null hypothesis of equal MTBFs"
     )
   )
 }
