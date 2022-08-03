@@ -1,6 +1,6 @@
 #' Probability Ratio Sequential Test (PRST)
 #'
-#' \code{prst} returns parameters defining a PRST as developed by Abraham Wald.
+#' \code{exp_prst} returns parameters defining a PRST for the exponential distribution as developed by Abraham Wald.
 #'
 #' @param mtbf0 The minimum acceptable MTBF.
 #' @param mtbfA A value of MTBF greater than MTBF0 at which we want to
@@ -20,7 +20,7 @@
 #'   the accept/reject times.
 #'
 #' @seealso \code{\link{exp_reliability_req}}, \code{\link{exp_test_duration}},
-#'   \code{\link{exp_test_demo}}, \code{\link{prst_plot}}
+#'   \code{\link{exp_test_demo}}, \code{\link{exp_prst_plot}}
 #'
 #' @references
 #' Mil-Hdbk-781A
@@ -30,11 +30,11 @@
 #' Brazovsky, Igor. Reliability Theory and Practice. Prentice Hall, 1961.
 #'
 #' @examples
-#' prst(mtbf0=100, mtbfa=200, alpha=.1, beta=.1)
-#' prst(mtbf0=100, mtbfa=200, alpha=.2, beta=.1)
+#' exp_prst(mtbf0=100, mtbfa=200, alpha=.1, beta=.1)
+#' exp_prst(mtbf0=100, mtbfa=200, alpha=.2, beta=.1)
 #'
 #' @export
-prst <- function(mtbf0, mtbfa, alpha=.1, beta=.1){
+exp_prst <- function(mtbf0, mtbfa, alpha=.1, beta=.1){
 
   if(mtbf0 >= mtbfa){
     stop("mtbfa must be > mtbf0")

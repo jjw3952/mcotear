@@ -1,7 +1,7 @@
 #' Probability Ratio Sequential Test (PRST) Plot
 #'
-#' \code{prst_plot} returns parameters defining a PRST (as developed by Abraham Wald),
-#'   and creates the plot of the results and defined parameters.
+#' \code{exp_prst_plot} returns parameters defining a PRST for the exponential distribution
+#'   (as developed by Abraham Wald), and creates the plot of the results and defined parameters.
 #'
 #' @param r (Optional, default as NULL) The cumulative number of failures up to time t.
 #'   If specified it must be of equal length to t.
@@ -27,7 +27,7 @@
 #'   parameters \code{r} and \code{t}.
 #'
 #' @seealso \code{\link{exp_reliability_req}}, \code{\link{exp_test_duration}},
-#'   \code{\link{exp_test_demo}}, \code{\link{prst}}
+#'   \code{\link{exp_test_demo}}, \code{\link{exp_prst}}
 #'
 #' @references
 #' Mil-Hdbk-781A
@@ -37,14 +37,14 @@
 #' Brazovsky, Igor. Reliability Theory and Practice. Prentice Hall, 1961.
 #'
 #' @examples
-#' prst_plot(r=NULL, t=NULL, mtbf0=100, mtbfa=200, alpha=.1, beta=.1)
-#' prst_plot(
+#' exp_prst_plot(r=NULL, t=NULL, mtbf0=100, mtbfa=200, alpha=.1, beta=.1)
+#' exp_prst_plot(
 #'   r = c(0,1,2,3,4,5,6,6,14),
 #'   t = c(0,100,150,200,250,275,300,1500,2060),
 #'   mtbf0=100, mtbfa=200, alpha=.1, beta=.1)
 #'
 #' @export
-prst_plot <- function(r=NULL, t=NULL, mtbf0=100, mtbfa=200, alpha=.1, beta=.1){
+exp_prst_plot <- function(r=NULL, t=NULL, mtbf0=100, mtbfa=200, alpha=.1, beta=.1){
 
   if(mtbf0 >= mtbfa){
     stop("mtbfa must be > mtbf0")
@@ -55,7 +55,7 @@ prst_plot <- function(r=NULL, t=NULL, mtbf0=100, mtbfa=200, alpha=.1, beta=.1){
 
   fail_dat <- data.frame(r, t)
 
-  prst_calcs <- prst(mtbf0, mtbfa, alpha, beta)
+  prst_calcs <- exp_prst(mtbf0, mtbfa, alpha, beta)
   
   regions <- with(prst_calcs, data.frame(
     x = c(0, (r-c)/b, T, -a/b, T, T),
