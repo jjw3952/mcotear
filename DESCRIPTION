@@ -14,7 +14,17 @@ Depends:
     ggplot2,
     gridExtra,
     data.table,
-    magrittr
+    magrittr,
+    shiny,
+    readxl,
+    lubridate,
+    plotly,
+    htmlwidgets,
+    DT,
+    shinyjs,
+    shinyBS,
+    shinyFiles,
+    timevis
 dependencies: true
 License: Not-applicable
 Encoding: UTF-8
