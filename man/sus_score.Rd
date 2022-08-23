@@ -24,5 +24,5 @@ sus_score(x = rep(c(5,1), times = 5))
 }
 \seealso{
 \code{\link{sus_score_df}}, \code{\link{sus_to_percentile}},
-  \code{\link{gg_suaro}}, \code{\link{gg_sus}}
+  \code{\link{sus_suaro}}, \code{\link{gg_sus}}
 }
