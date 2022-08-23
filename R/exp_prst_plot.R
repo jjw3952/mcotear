@@ -3,12 +3,12 @@
 #' \code{exp_prst_plot} returns parameters defining a PRST for the exponential distribution
 #'   (as developed by Abraham Wald), and creates the plot of the results and defined parameters.
 #'
-#' @param r (Optional, default as NULL) The cumulative number of failures up to time t.
-#'   If specified it must be of equal length to t.
+#' @param r (Optional, default as NULL) The cumulative number of failures up to time \code{t}.
+#'   If specified it must be of equal length to \code{t}.
 #' @param t (Optional, default as NULL) The cumulative (operational) time.
-#'   If specified it must be of equal length to r.
+#'   If specified it must be of equal length to \code{r}.
 #' @param mtbf0 The minimum acceptable MTBF.
-#' @param mtbfa A value of MTBF greater than MTBF0 at which we want to
+#' @param mtbfa A value of MTBF greater than \code{mtbf0} at which we want to
 #'   ensure we don't reject the system.
 #' @param alpha The producer's risk of rejecting equipment with MTBF > MTBFA
 #'   (the probility of rejecting good equipment). Default = 0.10.
@@ -105,6 +105,6 @@ exp_prst_plot <- function(r=NULL, t=NULL, mtbf0=100, mtbfa=200, alpha=.1, beta=.
   geom_step(data = fail_dat, aes(x = t, y = r)) +
   geom_point(data = fail_dat, aes(x = t, y = r, fill = I(color)), shape = 21)
 
-  print(prst_plot)
-  return(prst_calcs)
+  #print(prst_plot)
+  return(list(prst_calcs, plot = prst_plot))
 }

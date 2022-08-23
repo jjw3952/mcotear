@@ -9,14 +9,14 @@ exp_prst(mtbf0, mtbfa, alpha = 0.1, beta = 0.1)
 \arguments{
 \item{mtbf0}{The minimum acceptable MTBF.}
 
+\item{mtbfa}{A value of MTBF greater than \code{mtbf0} at which we want to
+ensure we don't reject the system.}
+
 \item{alpha}{The producer's risk of rejecting equipment with MTBF > MTBFA
 (the probility of rejecting good equipment). Default = 0.10.}
 
 \item{beta}{The consumer's risk of accepting equipment with MTBF < MTBF0.
 (the probility of accepting bad equipment). Default = 0.10.}
-
-\item{mtbfA}{A value of MTBF greater than MTBF0 at which we want to
-ensure we don't reject the system.}
 }
 \value{
 The output will return \code{r} = the number of failures at which

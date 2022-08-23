@@ -3,7 +3,7 @@
 #' \code{exp_prst} returns parameters defining a PRST for the exponential distribution as developed by Abraham Wald.
 #'
 #' @param mtbf0 The minimum acceptable MTBF.
-#' @param mtbfA A value of MTBF greater than MTBF0 at which we want to
+#' @param mtbfa A value of MTBF greater than \code{mtbf0} at which we want to
 #'   ensure we don't reject the system.
 #' @param alpha The producer's risk of rejecting equipment with MTBF > MTBFA
 #'   (the probility of rejecting good equipment). Default = 0.10.

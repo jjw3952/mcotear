@@ -14,15 +14,15 @@ exp_prst_plot(
 )
 }
 \arguments{
-\item{r}{(Optional, default as NULL) The cumulative number of failures up to time t.
-If specified it must be of equal length to t.}
+\item{r}{(Optional, default as NULL) The cumulative number of failures up to time \code{t}.
+If specified it must be of equal length to \code{t}.}
 
 \item{t}{(Optional, default as NULL) The cumulative (operational) time.
-If specified it must be of equal length to r.}
+If specified it must be of equal length to \code{r}.}
 
 \item{mtbf0}{The minimum acceptable MTBF.}
 
-\item{mtbfa}{A value of MTBF greater than MTBF0 at which we want to
+\item{mtbfa}{A value of MTBF greater than \code{mtbf0} at which we want to
 ensure we don't reject the system.}
 
 \item{alpha}{The producer's risk of rejecting equipment with MTBF > MTBFA

@@ -22,5 +22,6 @@ Imports:
     ggplot2,
     gridExtra,
     goftest,
-    ssanv
+    ssanv,
+    data.table
 RoxygenNote: 7.1.2
