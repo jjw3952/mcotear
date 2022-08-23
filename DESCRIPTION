@@ -13,15 +13,13 @@ Depends:
     R (>= 3.4.1),
     ggplot2,
     gridExtra,
-    data.table
+    data.table,
+    magrittr
 dependencies: true
 License: Not-applicable
 Encoding: UTF-8
 LazyData: true
 Imports:
-    ggplot2,
-    gridExtra,
     goftest,
-    ssanv,
-    data.table
+    ssanv
 RoxygenNote: 7.1.2
