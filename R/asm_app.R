@@ -28,7 +28,6 @@ asm_app <- function(filedir, launch.browser = TRUE){
 #library(plotly)
 #library(mcotear)
 
-filedir <- "C:/Users/jacob.j.warren/OneDrive - United States Marine Corps/Desktop/jacob.j.warren_Outputs"
 fp1 <- file.path(filedir, "datFormProgram.xlsx")
 fp2 <- file.path(filedir, "qryProgramsMilestonesInfo.xlsx")
 
