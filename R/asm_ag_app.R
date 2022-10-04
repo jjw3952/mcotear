@@ -1,4 +1,4 @@
-#' Solve for Inherent Availability Given Operational Availability, CMT and ALDT
+#' Shiny app for use with MCOTEA Analysis Sychronization Matrix (ASM)
 #'
 #' \code{asm_ag_app} provides a Shiny application for importing and viewing data
 #'   from the MCOTEA ASM datFormTable.xlsx output.
@@ -8,11 +8,14 @@
 #' @seealso 
 #'
 #' @examples
-#' # asm_ag_app(filedir = "directory containing datFormProgram.xlsx")
+#' # asm_ag_app(
+#' #   filedir = "directory containing datFormProgram.xlsx"
+#' #   launch.browser = TRUE
+#' # )
 #'
 #' @export
 # Run the application 
-asm_ag_app <- function(filedir){
+asm_ag_app <- function(filedir, launch.browser = TRUE){
 
 # Load Packages
 #library(shiny)
@@ -1894,7 +1897,7 @@ server <- function(input, output, session) {
 }
 
   filedir <<- filedir
-  shinyApp(ui = ui, server = server)
+  shinyApp(ui = ui, server = server, option = list(launch.browser = launch.browser))
 }
 
 

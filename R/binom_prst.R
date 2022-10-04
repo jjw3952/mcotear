@@ -126,8 +126,8 @@ binom_prst <- function(p0 = p0, p1 = p1, m = m, alpha = 0.10, beta = 0.10, r = N
     ggplot() +
     geom_line(aes(x = p, y = l_p)) +
     labs(
-      x = "Probability of Penetration",
-      y = "Probability of Passing"
+      x = "Probability of Defect",
+      y = "Probability of Passing (Acceptance)"
     ) +
     scale_x_continuous(breaks = seq(0.0, 1.0, .1), limits = c(0.0,1.0)) +
     scale_y_continuous(breaks = seq(0, 1, .1), limits = c(0,1)) +
@@ -172,7 +172,7 @@ binom_prst <- function(p0 = p0, p1 = p1, m = m, alpha = 0.10, beta = 0.10, r = N
     ggplot() +
     geom_line(aes(x = p, y = ep_n)) +
     labs(
-      x = "Probability of Penetration",
+      x = "Probability of Defect",
       y = "Average Sample Number"
     ) +
     scale_x_continuous(breaks = seq(0.0, 1.0, .1), limits = c(0.0,1.0)) +

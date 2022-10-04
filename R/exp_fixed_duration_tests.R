@@ -46,14 +46,23 @@
 #' # Recipe for plotting a single OC Curve
 #' alpha <- .2
 #' beta <- .2
-#' mtbf0 <- 500
-#' mtbfa <- 1000
+#' mtbf0 <- 500   # threshold requirement
+#' mtbfa <- 1000  # setting this closer to the requirement will result in
+#'                # requiring a longer test and hence the table returned
+#'                # from exp_fixed_duration_tests will be loner
+#' 
 #' (fd <- exp_fixed_duration_tests(mtbf0 = mtbf0, mtbfa = mtbfa, alpha = alpha, beta = beta))
 #' test <- 6 # select row of test from fd
 #' theta <- seq(250, 2000, 50)
+#'
+#' # The probability of passing the test of a given duration with an allowable number of failures, given the true MTBF
 #' prob_pass <- exp_oc(accept = fd$Accept[test], duration = fd$Duration[test], mtbf = theta)
 #' 
 #' df <- data.frame(x = c(mtbf0, mtbfa), y = c(alpha, 1-fd$beta[test]), label = c("alpha", "1-beta"))
+#' 
+#' # The multiples of mtbf0 I want plotted on the top x-axis
+#'  m <- seq(0, 9, 1)
+#'  labels <- parse(text = paste0(m, "*theta"))
 #' 
 #' ggplot(data.frame(prob_pass = prob_pass, theta = theta)) +
 #'   geom_point(aes(x = theta, y = prob_pass)) +
@@ -67,23 +76,41 @@
 #'     data = df,
 #'     mapping = aes(x, y, label = label), parse = TRUE, colour = "red", hjust = c(-1,1.2)
 #'   ) +
-#'   labs(
-#'     x = "MTBF", y = "Prob of Acceptance",
-#'     title = "Exponential OC Curve",
-#'     subtitle = paste0("Test Duration = ", ceiling(fd$Duration[test]), ". Allowable Failures = ", fd$Accept[test])
-#'   )
+#'    labs(
+#'      x = "MTBF", y = "Prob of Acceptance",
+#'      title = "Exponential OC Curve",
+#'      subtitle = bquote(atop(H[0]*": MTBF"<=.(mtbf0)*phantom(0),H[a]*": MTBF"==.(mtbfa))),
+#'      caption = bquote(
+#'                  atop(
+#'                    "Test Duration = "*.(ceiling(fd$Duration[test]))*". Allowable Failures = "*.(fd$Accept[test])*".",
+#'                    theta==MTBF~Threshold==.(mtbf0)
+#'                  )
+#'                )
+#'    ) +
+#'    scale_x_continuous(
+#'      breaks = seq(0, 3000, 200),
+#'      sec.axis = sec_axis(~.,
+#'        breaks = m*mtbf0,
+#'        labels = labels
+#'      )
+#'    )
 #' 
 #' # Recipe for plotting multiple OC curves
 #' alpha <- .2
 #' beta <- .2
-#' mtbf0 <- 500
-#' mtbfa <- 1000
+#' mtbf0 <- 500   # threshold requirement
+#' mtbfa <- 1000  # setting this closer to the requirement will result in
+#'                # requiring a longer test and hence the table returned
+#'                # from exp_fixed_duration_tests will be loner
+#' 
 #' (fd <- exp_fixed_duration_tests(mtbf0 = mtbf0, mtbfa = mtbfa, alpha = alpha, beta = beta))
 #' test <- 1:7 # select row(s) of test from fd
-#' theta <- seq(mtbf0/2, mtbf0*8.8, 50)
-
+#' theta <- seq(mtbf0/2, mtbf0*8.8, 50) # the range of the true MTBF over which I want to plot
+#' 
 #' #library(purrr)
 #' #library(reshape2)
+#'
+#' # exp_oc gives the probability of passing the test of a given duration with an allowable number of failures, given the true MTBF
 #' prob_pass <- purrr::map2(
 #'   .x = fd$Accept[test],
 #'   .y = fd$Duration[test],
@@ -105,6 +132,10 @@
 #' 
 #' exp_test_duration(0, 500)
 #' 
+#' # The multiples of mtbf0 I want plotted on the top x-axis
+#' m <- seq(0, 9, 1)
+#' labels <- parse(text = paste0(m, "*theta"))
+#' 
 #' ggplot(
 #'   prob_pass,
 #'   aes(
@@ -117,6 +148,14 @@
 #'   geom_point(size = .75) +
 #'   geom_path() +
 #'   scale_y_continuous(limits = c(0,1), breaks = seq(0,1,.2)) +
+#'   scale_x_continuous(
+#'     breaks = seq(0, 5000, 500),
+#'     limits = c(0, max(prob_pass$MTBF)),
+#'     sec.axis = sec_axis(~.,
+#'       breaks = m*mtbf0,
+#'       labels = labels
+#'     )
+#'   ) +
 #'   geom_point(
 #'     inherit.aes = FALSE,
 #'     data = df,
@@ -131,7 +170,8 @@
 #'     colour = "Allowable Failures,\nTest Duration",
 #'     x = "MTBF", y = "Prob of Acceptance",
 #'     title = "Exponential OC Curve",
-#'     subtitle = bquote(atop(H[0]*": MTBF"<=.(mtbf0)*phantom(0),H[a]*": MTBF">.(mtbfa)))
+#'     subtitle = bquote(atop(H[0]*": MTBF"<=.(mtbf0)*phantom(0),H[a]*": MTBF"==.(mtbfa))),
+#'     caption = bquote(theta==MTBF~Threshold==.(mtbf0))
 #'   ) +
 #'   guides(
 #'     fill = guide_legend(
@@ -153,7 +193,7 @@
 #'
 #' # Clean up workspace
 #' rm(list =
-#'   c("alpha", "beta", "df", "fd", "mtbf0",
+#'   c("alpha", "beta", "df", "fd", "mtbf0", "m", "labels",
 #'     "mtbfa", "prob_pass","test", "theta")
 #' )
 #' @export

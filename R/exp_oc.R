@@ -1,6 +1,6 @@
-#' Exponential Operating Characteristic (OC) Curves
+#' Exponential Operating Characteristic (OC) Function
 #'
-#' \code{exp_oc} computes OC curves for exponential reliability tests
+#' \code{exp_oc} the OC function for exponential reliability tests
 #'   (probability of passing test as a function of true MTBF). See pg. 67
 #'   for the OC formula in MIL-HDBK-781A.
 #'
@@ -9,7 +9,8 @@
 #' @param mtbf A vector of the true MTBFs.
 #'
 #' @return The probability of passing the test of a given duration with an
-#'   allowable number of failures, given the true MTBF.
+#'   allowable number of failures, given the true MTBF. (The probability of
+#'   accepting items with an MTBF = \code{mtbf}.)
 #'
 #' @seealso \code{\link{exp_mtbf_req}}, \code{\link{exp_reliability_req}},
 #'   \code{\link{exp_test_duration}}, \code{\link{exp_mean_lcb}},

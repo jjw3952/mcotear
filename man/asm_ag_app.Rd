@@ -2,9 +2,9 @@
 % Please edit documentation in R/asm_ag_app.R
 \name{asm_ag_app}
 \alias{asm_ag_app}
-\title{Solve for Inherent Availability Given Operational Availability, CMT and ALDT}
+\title{Shiny app for use with MCOTEA Analysis Sychronization Matrix (ASM)}
 \usage{
-asm_ag_app(filedir)
+asm_ag_app(filedir, launch.browser = TRUE)
 }
 \value{
 A Shiny Application.
@@ -14,7 +14,10 @@ A Shiny Application.
   from the MCOTEA ASM datFormTable.xlsx output.
 }
 \examples{
-# asm_ag_app(filedir = "directory containing datFormProgram.xlsx")
+# asm_ag_app(
+#   filedir = "directory containing datFormProgram.xlsx"
+#   launch.browser = TRUE
+# )
 
 }
 \seealso{

@@ -2,7 +2,7 @@
 % Please edit documentation in R/exp_oc.R
 \name{exp_oc}
 \alias{exp_oc}
-\title{Exponential Operating Characteristic (OC) Curves}
+\title{Exponential Operating Characteristic (OC) Function}
 \usage{
 exp_oc(accept, duration, mtbf)
 }
@@ -15,10 +15,11 @@ exp_oc(accept, duration, mtbf)
 }
 \value{
 The probability of passing the test of a given duration with an
-  allowable number of failures, given the true MTBF.
+  allowable number of failures, given the true MTBF. (The probability of
+  accepting items with an MTBF = \code{mtbf}.)
 }
 \description{
-\code{exp_oc} computes OC curves for exponential reliability tests
+\code{exp_oc} the OC function for exponential reliability tests
   (probability of passing test as a function of true MTBF). See pg. 67
   for the OC formula in MIL-HDBK-781A.
 }
