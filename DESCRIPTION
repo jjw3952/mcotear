@@ -10,26 +10,27 @@ Description: Contains several functions that document commonly used tasks with
 Author: Jacob Warren [aut]
 Maintainer: Jacob Warren <jacob.j.warren@usmc.mil>
 Depends:
-    R (>= 3.4.1),
+    data.table,
     ggplot2,
     gridExtra,
-    data.table,
     magrittr,
-    shiny,
-    readxl,
-    lubridate,
-    plotly,
-    htmlwidgets,
-    DT,
-    shinyjs,
-    shinyBS,
-    shinyFiles,
-    timevis
+    R (>= 3.4.1)
 dependencies: true
 License: Not-applicable
 Encoding: UTF-8
 LazyData: true
-Imports:
-    goftest,
-    ssanv
 RoxygenNote: 7.1.2
+Imports: 
+    DT,
+    goftest,
+    htmlwidgets,
+    jsonlite,
+    lubridate,
+    plotly,
+    readxl,
+    shiny,
+    shinyBS,
+    shinyFiles,
+    shinyjs,
+    ssanv,
+    timevis
