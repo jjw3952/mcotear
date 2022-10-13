@@ -1634,8 +1634,8 @@ server <- function(input, output, session) {
         "ORSA" = "ORSA",
         "TM" = "TM",
         "DM" = "DM",
-        "Cyber" = "CA",
-        "Live Fire" = "LFAnalyst"
+        "Cyber" = "Cy",
+        "Live Fire" = "LF"
       )
       filter_column <- which(names(dt) == filter_column)
       
@@ -1985,25 +1985,28 @@ server <- function(input, output, session) {
     #              fromJSON(p_json$x$data)$data$name))
 
 
-    #dont_trace <- is.na(fromJSON(p_json)$data$name)
-    dont_trace <- fromJSON(p_json)$data$mode == "text"
-    # dont_trace <- rep(FALSE, length(dont_trace))
+    traces <- fromJSON(p_json)$data$mode
+    if("text" %in% traces){
+      #dont_trace <- fromJSON(p_json)$data$mode == "text"
+      dont_trace <- is.na(fromJSON(p_json)$data$mode)
 
-    p <- plot_fun_plotly(
-      dt, dt_ss, dt_prog, dt_miles,
-      steps = steps, temps_reports = temps_reports, milestones = milestones,
-      reviews = reviews, quarters = input$quarters, xaxis = input$xaxis) %>%
-      ggplotly(tooltip = c("text")) %>%
-      style(textposition = "right", hoverinfo = "none", traces = dont_trace) %>%
-      layout(xaxis = list(
-        range = c(as.numeric(start.date), as.numeric(stop.date))
-      )
-      ) %>%
-      config(
-        toImageButtonOptions = list(
-          format = "png", height = 750, width = 1400, scale = 3
+      p <- plot_fun_plotly(
+        dt, dt_ss, dt_prog, dt_miles,
+        steps = steps, temps_reports = temps_reports, milestones = milestones,
+        reviews = reviews, quarters = input$quarters, xaxis = input$xaxis) %>%
+        ggplotly(tooltip = c("text")) %>%
+        style(textposition = "right", hoverinfo = "none", traces = dont_trace) %>%
+        layout(xaxis = list(
+          range = c(as.numeric(start.date), as.numeric(stop.date))
         )
-      )
+        ) %>%
+        config(
+          toImageButtonOptions = list(
+            format = "png", height = 750, width = 1400, scale = 3
+          )
+        )
+    }
+
     
     # Add vertical lines
     verticals <- strsplit(f_verticals(), ",") %>% unlist %>% as.numeric
