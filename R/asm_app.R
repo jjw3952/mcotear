@@ -2768,6 +2768,25 @@ server <- function(input, output, session) {
   device_plot2 <- function(dt, dt2, start.date = start.date, stop.date = stop.date){
     setkey(dt, ReverseOrd)
     
+    program_id_count <- dt[, .N, .(ID, Program)][, .N, Program]
+    dt <- merge(dt, program_id_count, by = "Program")
+
+    dt_n <- unique(dt[N > 1, .(MinDate = min(Date)), .(ID, Program, N)])
+    dt_n[, Ord := order(MinDate), Program]
+    dt <- merge(
+      dt, dt_n,
+      by = c("ID", "Program", "N"), all = TRUE)
+    dt[is.na(Ord), Ord := 0]
+    
+    seq2 <- Vectorize(seq.default, vectorize.args = c("from", "to", "length.out"))
+    dt[N > 1, ROS := ReverseOrd + ((seq2( (N-1), -(N-1), length.out = N))[Ord])/N]
+    dt[is.na(ROS), ROS := ReverseOrd]
+    
+    dt[, ROST := ROS + 1/(N+1)]
+    dt[, ROSB := ROS - 1/(N+1)]
+    
+    dt2 <- unique(merge(dt2, dt[, .(ID, ROS)], by = "ID", all.x = TRUE, all.y = FALSE))
+
     # Base plot
     my_plot <- dt %>%
       ggplot()
@@ -2803,7 +2822,9 @@ server <- function(input, output, session) {
       geom_ribbon(
         data = dt,
         aes(
-          x = Date, ymin = ReverseOrd-.5, ymax = ReverseOrd+.5,
+          x = Date,
+          # ymin = ReverseOrd-.5, ymax = ReverseOrd+.5,
+          ymin = ROSB, ymax = ROST,
           #alpha = Action,
           fill = Action,
           group = interaction(ID, Program,  Action),
@@ -2830,7 +2851,10 @@ server <- function(input, output, session) {
     my_plot <- my_plot +
       geom_text(
         data = dt2,
-        aes(x = MaxDate, y = ReverseOrd, label = Label,
+        aes(x = MaxDate,
+            # y = ReverseOrd,
+            y = ROS,
+            label = Label,
              text = paste(
                'Division:', Division,
                '</br></br>Program:', Program,
