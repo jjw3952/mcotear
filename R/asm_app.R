@@ -2771,16 +2771,20 @@ server <- function(input, output, session) {
     program_id_count <- dt[, .N, .(ID, Program)][, .N, Program]
     dt <- merge(dt, program_id_count, by = "Program")
 
-    dt_n <- unique(dt[N > 1, .(MinDate = min(Date)), .(ID, Program, N)])
-    dt_n[, Ord := order(MinDate), Program]
-    dt <- merge(
-      dt, dt_n,
-      by = c("ID", "Program", "N"), all = TRUE)
-    dt[is.na(Ord), Ord := 0]
+    if( dt[, max(N)] > 1 ){
+      dt_n <- unique(dt[N > 1, .(MinDate = min(Date)), .(ID, Program, N)])
+      dt_n[, Ord := order(MinDate), Program]
+      dt <- merge(
+        dt, dt_n,
+        by = c("ID", "Program", "N"), all = TRUE)
+      dt[is.na(Ord), Ord := 0]
     
-    seq2 <- Vectorize(seq.default, vectorize.args = c("from", "to", "length.out"))
-    dt[N > 1, ROS := ReverseOrd + ((seq2( (N-1), -(N-1), length.out = N))[Ord])/N]
-    dt[is.na(ROS), ROS := ReverseOrd]
+      seq2 <- Vectorize(seq.default, vectorize.args = c("from", "to", "length.out"))
+      dt[N > 1, ROS := ReverseOrd + ((seq2( (N-1), -(N-1), length.out = N))[Ord])/N]
+      dt[is.na(ROS), ROS := ReverseOrd]
+    } else {
+      dt[, ROS := ReverseOrd]
+    }
     
     dt[, ROST := ROS + 1/(N+1)]
     dt[, ROSB := ROS - 1/(N+1)]
