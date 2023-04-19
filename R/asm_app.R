@@ -197,7 +197,8 @@ plot_fun_pswg <- function(dt, start = Sys.Date(), days = 90){
     geom_point(aes(x = Date, y = ReverseOrdShift, colour = Division,
                    text = paste(
                      'Division:', Division,
-                     '</br></br>Program:', Program,
+                     '</br></br>Lead OTA:', LeadOTA,
+                     '</br>Program:', Program,
                      '</br>Product:', Product,
                      '</br>Review:', Review,
                      '</br>Date:', Date,
@@ -357,7 +358,7 @@ plot_fun_cub <- function(dt, dt_ss, dt_prog, start = Sys.Date(), days = 90, add_
   if(add_steps){
     dt_ss_long <- melt.data.table(
       dt_ss,
-      id.vars = c("ID", "Division", "Program", "ReverseOrdShiftBottom", "ReverseOrdShiftTop", "Step",
+      id.vars = c("ID", "LeadOTA", "Division", "Program", "ReverseOrdShiftBottom", "ReverseOrdShiftTop", "Step",
       "Product", "Event", "EventName", "DaysToStart", "Duration", "DaysToEnd",
       "OTPO", "ORSA", "MS", "TM", "DM", "Cy", "LF"),
         #c("ID", "Division", "Program", "ReverseOrdShiftBottom", "ReverseOrdShiftTop", "Step"),
@@ -377,7 +378,8 @@ plot_fun_cub <- function(dt, dt_ss, dt_prog, start = Sys.Date(), days = 90, add_
           fill = Step, group = interaction(ID, Program, Step),
           text = paste(
             'Division:', Division,
-            '</br></br>Program:', Program,
+            '</br></br>Lead OTA:', LeadOTA,
+            '</br>Program:', Program,
             '</br>Step:', Step,
             '</br>Date:', Date,
             '</br>DaysToStart:', DaysToStart,
@@ -564,7 +566,7 @@ plot_fun_plotly <- function(
   
   dt_ss_long <- melt.data.table(
     dt_ss,
-    id.vars = c("ID", "Division", "Program", "ReverseOrdShiftBottom", "ReverseOrdShiftTop", "Step",
+    id.vars = c("ID", "LeadOTA", "Division", "Program", "ReverseOrdShiftBottom", "ReverseOrdShiftTop", "Step",
                 "Product", "Event", "EventName", "DaysToStart", "Duration", "DaysToEnd",
                 "OTPO", "ORSA", "MS", "TM", "DM", "Cy", "LF"),
     measure.vars = c("StartDate", "StopDate"),
@@ -584,7 +586,8 @@ plot_fun_plotly <- function(
         fill = Step, group = interaction(ID, Program, Step),
         text = paste(
           'Division:', Division,
-          '</br></br>Program:', Program,
+          '</br></br>Lead OTA:', LeadOTA,
+          '</br>Program:', Program,
           '</br>Step:', Step,
           '</br>Date:', Date,
           '</br>DaysToStart:', DaysToStart,
@@ -636,7 +639,8 @@ plot_fun_plotly <- function(
                  aes(x = Date, y = ReverseOrdShift, fill = Step,
                      text = paste(
                        'Division:', Division,
-                       '</br></br>Program:', Program,
+                       '</br></br>Lead OTA:', LeadOTA,
+                       '</br>Program:', Program,
                        '</br>Product:', Product,
                        '</br>Review:', Review,
                        '</br>Date:', Date,
@@ -992,9 +996,9 @@ server <- function(input, output, session) {
       dt <- dt()
       
       dt <- dt[
-        Current == "Y",
+        StepStatus == "Active",
         .(
-          ID, Program, Division, Step, Product, Event, EventName,
+          ID, LeadOTA, Program, Division, Step, Product, Event, EventName,
           CRBIPRDate, IPR1Date, IPR2Date, IPR3Date, IPR4Date, IPR5Date, TEMPDate, OTRBDate, OTRRDate,
           OTPO, ORSA, MS, TM, DM, Cy, LF
         )
@@ -1017,7 +1021,7 @@ server <- function(input, output, session) {
       
       dt <- melt.data.table(
         dt,
-        id.vars = c("ID", "Program", "Division", "Step", "Product", "Event", "EventName",
+        id.vars = c("ID", "LeadOTA", "Program", "Division", "Step", "Product", "Event", "EventName",
                     "OTPO", "ORSA", "MS", "TM", "DM", "Cy", "LF"),
         variable.name = "Review", value.name = "Date"
       )
@@ -1045,8 +1049,8 @@ server <- function(input, output, session) {
       dt <- dt()
       
       dt <- dt[
-        Current == "Y",
-        .(ID, Program, Division, Step, Product, Event, EventName, StartDate, Duration,
+        StepStatus == "Active",
+        .(ID, LeadOTA, Program, Division, Step, Product, Event, EventName, StartDate, Duration,
           OTPO, ORSA, MS, TM, DM, Cy, LF
         ),
         keyby = .(StopDate)
@@ -1283,7 +1287,7 @@ server <- function(input, output, session) {
   output$pswg_table <- renderDT(server = FALSE, {                                      #
     dt <- dt_pswg()
     setDT(dt)
-    dt <- dt[, .(ID, Program, Division, Step, Product, Event, EventName, Review, Date, Order, ReverseOrdShift)]
+    dt <- dt[, .(ID, LeadOTA, Program, Division, Step, Product, Event, EventName, Review, Date, Order, ReverseOrdShift)]
     
     datatable(                                                                         #
       dt,                                                                              #
@@ -1391,7 +1395,7 @@ server <- function(input, output, session) {
       
       dt_prog <- merge(
         dt_prog,
-        unique(dt[, .(Program, Division, ReverseOrd)]),
+        unique(dt[, .(LeadOTA, Program, Division, ReverseOrd)]),
         by = c("Program", "Division"), all.x = T)
       
       # return(dt_prog)
@@ -1742,8 +1746,8 @@ server <- function(input, output, session) {
     
     dt[is.na(EventName), EventName := Event]
     
-    dt_sub <- dt[Current == "Y",
-                 .(ID, Program, Division, Step, Product, Event, EventName, CRBIPRDate, IPR1Date,
+    dt_sub <- dt[StepStatus == "Active",
+                 .(ID, LeadOTA, Program, Division, Step, Product, Event, EventName, CRBIPRDate, IPR1Date,
                    IPR2Date, IPR3Date, IPR4Date, IPR5Date, TEMPDate,
                    OTRBDate, OTRRDate,
                    OTPO, ORSA, MS, TM, DM, Cy, LF
@@ -1753,8 +1757,8 @@ server <- function(input, output, session) {
     
     #=============================================================================
     # start and stop events
-    dt_ss <- dt[Current == "Y",
-                .(ID, Program, Division, Step, Product, Event, EventName, StartDate, Duration,
+    dt_ss <- dt[StepStatus == "Active",
+                .(ID, LeadOTA, Program, Division, Step, Product, Event, EventName, StartDate, Duration,
                   OTPO, ORSA, MS, TM, DM, Cy, LF),
                 keyby = .(StopDate)]
     date_range <- seq(start.date, stop.date, by = 1)
@@ -1779,7 +1783,7 @@ server <- function(input, output, session) {
     dt_sub_long <- melt(
       dt_sub,
       id.vars = c(
-        "ID", "Program", "Division", "Step", "Product", "Event", "EventName",
+        "ID", "LeadOTA", "Program", "Division", "Step", "Product", "Event", "EventName",
         "OTPO", "ORSA", "MS", "TM", "DM", "Cy", "LF"
       ),
       measure.vars = c(
@@ -2105,11 +2109,11 @@ server <- function(input, output, session) {
 
 
   dt_sub2 <- dt[
-    Current == "Y" & Step == "Event Execution" &
+    StepStatus == "Active" & Step == "Event Execution" &
       #(Event %in% c("OA", "OT", "Special Project")) &
       StartDate <= (seq(start.date, length = 2, by = paste0(dcd_months(), " months") )[2]),
     .(
-      ID, Program, Division, Event, EventName,
+      ID, LeadOTA, Program, Division, Event, EventName,
       DMPrimary, TMPrimary,
       NumDCDRequested, NumOfMesaTablet, NumOfGetacTablet, NumOfGetacLaptop
     ),
@@ -2140,7 +2144,7 @@ server <- function(input, output, session) {
   dt_long2 <- melt.data.table(
     dt_sub2,
     id.vars = c(
-      "ID", "Division", "Program", "Event", "EventName",
+      "ID", "LeadOTA", "Division", "Program", "Event", "EventName",
       "DMPrimary", "TMPrimary",
       "NumDCDRequested", "NumOfMesaTablet", "NumOfGetacTablet", "NumOfGetacLaptop"),
     variable.name = "Action", value.name = "Date"
@@ -2153,7 +2157,7 @@ server <- function(input, output, session) {
   # Separate Start and Stops
   dt_final2 <- dcast.data.table(
     dt_long2,
-    ID + Division + Program + Event + EventName +
+    ID + LeadOTA + Division + Program + Event + EventName +
       DMPrimary + TMPrimary +
       NumDCDRequested + NumOfMesaTablet + NumOfGetacTablet + NumOfGetacLaptop + Action ~ StartStop,
     value.var = "Date")
@@ -2216,7 +2220,7 @@ server <- function(input, output, session) {
   dcd_request <- unique(
     dt_final2[
       Action %in% c("DCD Prep, V&V", "DCD Reconfiguration"),
-      .(ID, Division, Program, Event, EventName, Action,
+      .(ID, LeadOTA, Division, Program, Event, EventName, Action,
         Start, Stop, TMPrimary, DMPrimary,
         NumDCDRequested, NumOfMesaTablet, NumOfGetacTablet, NumOfGetacLaptop)
     ]
@@ -2225,7 +2229,7 @@ server <- function(input, output, session) {
   dcd_request <- melt.data.table(
     dcd_request,
     id.vars = c(
-      "ID", "Division", "Program", "Event", "EventName",
+      "ID", "LeadOTA", "Division", "Program", "Event", "EventName",
       "Action", "TMPrimary", "DMPrimary",
       "NumDCDRequested", "NumOfMesaTablet", "NumOfGetacTablet", "NumOfGetacLaptop"),
     variable.name = "SS", value.name = "Date")
@@ -2305,7 +2309,7 @@ server <- function(input, output, session) {
   dcd_request[, DCDs := factor(DCDs, levels = sort(unique(DCDs)))]
 
   dcd_request_wide <- dcast.data.table(dcd_request,
-    ID + Division + Program + Event + EventName +
+    ID + LeadOTA + Division + Program + Event + EventName +
       TMPrimary + DMPrimary + DCDs + PlotPosition ~ SS, value.var = "Date"
   )
   dcd_request_wide[, x := mean(c(Start, Stop)), by = ID]
@@ -2315,7 +2319,7 @@ server <- function(input, output, session) {
   dcd_request_long <- melt.data.table(
     dcd_request,
     id.vars = c(
-      "ID", "Division", "Program", "Event", "EventName", "PlotPosition",
+      "ID", "LeadOTA", "Division", "Program", "Event", "EventName", "PlotPosition",
       "TMPrimary", "DMPrimary", "SS", "Date", "DCDs"),
     measure.vars = c(
       "DCDsInUse", "MesasInUse", "GetacTabsInUse", "GetacLapsInUse"),
@@ -2411,7 +2415,8 @@ server <- function(input, output, session) {
       mapping = aes(x = x, y = PlotPosition*10^(pwr), label = paste0(Program, ", ", Event, ", ", DCDs),
                     text = paste(
                       'Division:', Division,
-                      '</br></br>Program:', Program,
+                      '</br></br>Lead OTA:', LeadOTA,
+                      '</br>Program:', Program,
                       '</br>EventName:', EventName,
                       '</br>DMPrimary:', DMPrimary,
                       '</br>StartDate:', Start,
@@ -2547,12 +2552,12 @@ server <- function(input, output, session) {
     
     
     dt_sub2 <- dt[
-      Current == "Y" & Step == "Event Execution" &
+      StepStatus == "Active" & Step == "Event Execution" &
         #(Event %in% c("OA", "OT", "Special Project")) &
         # StartDate <= (seq(start.date, length = 2, by = paste0(dcd_months2(), " months") )[2])
       (between(StartDate, start.date, stop.date) | between(StopDate, start.date, stop.date))
       ,
-      .(ID, Program, Division, Event, EventName, DMPrimary, TMPrimary,
+      .(ID, LeadOTA, Program, Division, Event, EventName, DMPrimary, TMPrimary,
         #NumDCDRequested,
         NumOfMesaTablet, NumOfGetacTablet, NumOfGetacLaptop
       ),
@@ -2582,7 +2587,7 @@ server <- function(input, output, session) {
     dt_long2 <- melt.data.table(
       dt_sub2,
       id.vars = c(
-        "ID", "Division", "Program", "Event", "EventName",
+        "ID", "LeadOTA", "Division", "Program", "Event", "EventName",
         "DMPrimary", "TMPrimary",
         "NumOfMesaTablet", "NumOfGetacTablet", "NumOfGetacLaptop"),
       variable.name = "Action", value.name = "Date"
@@ -2595,7 +2600,7 @@ server <- function(input, output, session) {
     # Separate Start and Stops
     dt_final2 <- dcast.data.table(
       dt_long2,
-      ID + Division + Program + Event + EventName + DMPrimary + TMPrimary +
+      ID + LeadOTA + Division + Program + Event + EventName + DMPrimary + TMPrimary +
       NumOfMesaTablet + NumOfGetacTablet + NumOfGetacLaptop + Action ~ StartStop,
       value.var = "Date")
     
@@ -2644,7 +2649,7 @@ server <- function(input, output, session) {
       dt_final2[
         #(between(Start, start.date, stop.date) | between(Stop, start.date, stop.date))
         ,
-        .(ID, Division, Program, Event, EventName, Action, Start, Stop,
+        .(ID, LeadOTA, Division, Program, Event, EventName, Action, Start, Stop,
           NumOfMesaTablet, NumOfGetacTablet, NumOfGetacLaptop,
           TMPrimary, DMPrimary)
       ]
@@ -2653,7 +2658,7 @@ server <- function(input, output, session) {
     dcd_request <- melt.data.table(
       dcd_request,
       id.vars = c(
-        "ID", "Division", "Program", "Event", "EventName", "Action",
+        "ID", "LeadOTA", "Division", "Program", "Event", "EventName", "Action",
         "NumOfMesaTablet", "NumOfGetacTablet", "NumOfGetacLaptop",
         "TMPrimary", "DMPrimary"),
       variable.name = "SS", value.name = "Date")
@@ -2678,7 +2683,7 @@ server <- function(input, output, session) {
     dcd_request_long2 <- melt.data.table(
       dcd_request,
       id.vars = c(
-        "ID", "Division", "Program", "Event", "EventName", "Action",
+        "ID", "LeadOTA", "Division", "Program", "Event", "EventName", "Action",
         "TMPrimary", "DMPrimary", "SS", "Date"),
       measure.vars = c(
         "NumOfMesaTablet", "NumOfGetacTablet", "NumOfGetacLaptop"),
@@ -2699,7 +2704,7 @@ server <- function(input, output, session) {
     dt_temp <- dcd_request_long2[
       abs(Qty) > 0,
       .(MaxDate = max(Date), Label = paste0(Device, ": ", abs(Qty) ) ),
-      .(Program, ID, Division, Event, EventName, TMPrimary, DMPrimary, ReverseOrd)
+      .(Program, ID, LeadOTA, Division, Event, EventName, TMPrimary, DMPrimary, ReverseOrd)
     ] %>% unique
     
     
@@ -2717,14 +2722,14 @@ server <- function(input, output, session) {
 
     # Merge so we have labels
     dt_label <- merge(
-      dt_temp[, .(Program, ID, Division, Event, EventName,
+      dt_temp[, .(Program, ID, LeadOTA, Division, Event, EventName,
                   TMPrimary, DMPrimary, ReverseOrd, MaxDate)] %>% unique,
       dt_labs, by = "ID"
     )
     
     dt_ribbon <- dcd_request_long2[
       abs(Qty)>0,
-      .(ID, Division, Program, Action, Event, EventName, Date, ReverseOrd)
+      .(ID, LeadOTA, Division, Program, Action, Event, EventName, Date, ReverseOrd)
     ] %>% unique
     
     dt_ribbon <- merge(
@@ -2834,7 +2839,8 @@ server <- function(input, output, session) {
           group = interaction(ID, Program,  Action),
           text = paste(
             'Division:', Division,
-            '</br></br>Program:', Program,
+            '</br></br>Lead OTA:', LeadOTA,
+            '</br>Program:', Program,
             '</br>Date:', Date,
             '</br>Event:', Event,
             '</br>Event Name:', EventName,
@@ -2861,7 +2867,8 @@ server <- function(input, output, session) {
             label = Label,
              text = paste(
                'Division:', Division,
-               '</br></br>Program:', Program,
+               '</br></br>Lead OTA:', LeadOTA,
+               '</br>Program:', Program,
                '</br>EndDate:', MaxDate,
                '</br>Event:', Event,
                '</br>Event Name:', EventName,
