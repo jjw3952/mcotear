@@ -1788,7 +1788,7 @@ server <- function(input, output, session) {
       ),
       measure.vars = c(
         "CRBIPRDate", "IPR1Date", "IPR2Date",
-        "IPR3Date", "IPR4aDate", "IPR4bDate", "IPR5Date", "TEMPDate", "OTRBDate", "OTRRDate", "FDSCDate", "FOSDueDate",
+        "IPR3Date", "IPR4aDate", "IPR4bDate", "IPR5Date", "TEMPDate", "OTRBDate", "OTRRDate", "FDSCDate", "FOSDueDate"
       ),
       variable.name = "Review",
       value.name = "Date"
