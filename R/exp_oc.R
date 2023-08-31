@@ -24,7 +24,7 @@
 #' ggplot(data.frame(prob_pass = prob_pass, theta = theta)) +
 #'   geom_line(
 #'     aes(x = theta, y = prob_pass),
-#'     size = 1, colour = "blue"
+#'     linewidth = 1, colour = "blue"
 #'   ) +
 #'   scale_y_continuous(limits = c(0,1), breaks = seq(0,1,.2))
 #'
@@ -32,7 +32,7 @@
 #' ggplot(data.frame(x=c(250,5000))) +
 #'   stat_function(
 #'     aes(x=x), fun = exp_oc, args = list(accept = 0, duration = 804.719),
-#'     size = 1, colour = "blue"
+#'     linewidth = 1, colour = "blue"
 #'   ) +
 #'   scale_y_continuous(limits = c(0,1), breaks = seq(0,1,.2)) +
 #'   labs(x = "MTBF", y = "Prob of Passing Demonstration")

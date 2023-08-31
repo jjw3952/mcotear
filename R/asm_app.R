@@ -999,7 +999,7 @@ server <- function(input, output, session) {
         StepStatus == "Active",
         .(
           ID, LeadOTA, Program, Division, Step, Product, Event, EventName,
-          CRBIPRDate, IPR1Date, IPR2Date, IPR3Date, IPR4Date, IPR5Date, TEMPDate, OTRBDate, OTRRDate,
+          CRBIPRDate, IPR1Date, IPR2Date, IPR3Date, IPR4aDate, IPR4bDate, IPR5Date, TEMPDate, OTRBDate, OTRRDate, FDSCDate, FOSDueDate,
           OTPO, ORSA, MS, TM, DM, Cy, LF
         )
       ]
@@ -1748,7 +1748,7 @@ server <- function(input, output, session) {
     
     dt_sub <- dt[StepStatus == "Active",
                  .(ID, LeadOTA, Program, Division, Step, Product, Event, EventName, CRBIPRDate, IPR1Date,
-                   IPR2Date, IPR3Date, IPR4Date, IPR5Date, TEMPDate,
+                   IPR2Date, IPR3Date, IPR4aDate, IPR4bDate, IPR5Date, TEMPDate, FDSCDate, FOSDueDate,
                    OTRBDate, OTRRDate,
                    OTPO, ORSA, MS, TM, DM, Cy, LF
                  )]
@@ -1788,7 +1788,7 @@ server <- function(input, output, session) {
       ),
       measure.vars = c(
         "CRBIPRDate", "IPR1Date", "IPR2Date",
-        "IPR3Date", "IPR4Date", "IPR5Date", "TEMPDate", "OTRBDate", "OTRRDate"
+        "IPR3Date", "IPR4aDate", "IPR4bDate", "IPR5Date", "TEMPDate", "OTRBDate", "OTRRDate", "FDSCDate", "FOSDueDate",
       ),
       variable.name = "Review",
       value.name = "Date"

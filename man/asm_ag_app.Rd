@@ -20,6 +20,3 @@ A Shiny Application.
 # )
 
 }
-\seealso{
-
-}
